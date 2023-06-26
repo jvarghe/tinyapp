@@ -1,0 +1,20 @@
+{
+  "name": "Tiny-App",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jvarghe/tinyapp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "AGPL v3.0",
+  "bugs": {
+    "url": "https://github.com/jvarghe/tinyapp/issues"
+  },
+  "homepage": "https://github.com/jvarghe/tinyapp#readme"
+}
