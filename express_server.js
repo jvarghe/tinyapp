@@ -14,7 +14,8 @@ app.set("view engine", "ejs");
 
 
 
-// Added an object with a list of URLs to the project.
+// Added an object with a list of URLs to the project. It simulates a data
+// source like a database.
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
@@ -35,6 +36,21 @@ app.get("/hello", (req, res) => {
 
   // `Hello World` wrapped in HTML tags.
   res.send("<html><body>Hello <b>World</b></body></html>\n");
+
+});
+
+
+// MAIN ROUTE HANDLERS
+
+// Route handler for GET `/urls`.
+app.get("/urls", (req, res) => {
+
+  // If you are sending data to a view, even a single variable, the convention
+  // is to wrap it in an object called `templateVars`.
+  const templateVariables = { urls: urlDatabase };
+
+  // Return the `urls_index.ejs` template. Embed `urlDatabase` in it.
+  res.render("urls_index.ejs", templateVariables);
 
 });
 
