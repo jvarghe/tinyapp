@@ -9,7 +9,12 @@ const app = express();
 // default port 8080
 const PORT = 8080;
 
-// Added a list of URLs to the project.
+// Add EJS to the project as the template engine.
+app.set("view engine", "ejs");
+
+
+
+// Added an object with a list of URLs to the project.
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
