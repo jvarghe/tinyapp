@@ -46,7 +46,7 @@ app.get("/urls", (req, res) => {
 
   // If you are sending data to a view, even a single variable, the convention
   // is to wrap it in an object called `templateVars`.
-  // const templateVariables = { urls: urlDatabase };
+  const templateVariables = { urls: urlDatabase };
 
   // Return the `urls_index.ejs` template. Embed values from`urlDatabase` in it.
   res.render("urls_index.ejs", templateVariables);
