@@ -18,9 +18,19 @@ const urlDatabase = {
 
 
 // REQUEST/RESPONSE PIPELINE
-// A default route to test "Hello World!"
+
+// A default route to serve as "Hello World" to those who visit `/`.
 app.get("/", (req, res) => {
   res.send("Hello!");
+});
+
+
+// A test route that returns HTML in the response body to requests for `/hello`.
+app.get("/hello", (req, res) => {
+
+  // `Hello World` wrapped in HTML tags.
+  res.send("<html><body>Hello <b>World</b></body></html>\n");
+
 });
 
 
@@ -28,7 +38,9 @@ app.get("/", (req, res) => {
 app.get("/urls.json", (req, res) => {
 
   // This endpoint will return the data from `urlDatabase` as a JSON file.
+  // Note that the response method is `.json()`.
   res.json(urlDatabase);
+
 });
 
 
