@@ -159,3 +159,21 @@ app.post("/urls", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
+
+
+
+// HELPER FUNCTIONS
+function generateRandomString() {
+
+  let stringLength = 6;
+  let randomString = "";
+  const characterSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for (let i = 0; i < stringLength; i++) {
+    randomString += characterSet.charAt(
+      Math.floor(Math.random() * characterSet.length));
+  }
+
+  return randomString;
+
+};
