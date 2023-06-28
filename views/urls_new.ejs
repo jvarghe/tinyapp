@@ -43,10 +43,50 @@
 
           <label for="longURL">Enter a URL:</label>
 
-          <!-- The `input` tag also has an important attribute: `name`. This
+          <!-- THE FORM
+
+               The `input` tag also has an important attribute: `name`. This
                is the name (key) of the data it is returning. In this case,
                it adds the key `longURL` to the data we'll be sending in the
                body of our POST request.
+
+
+               ADD A POST ROUTE TO RECEIVE THE FORM SUBMISSION
+
+               "So, now we should be able to see the new form in the browser
+               at `/urls/new`. What happens when this form is submitted? Note
+               the following about the form:
+
+                 * The form has an action attribute set to `/urls`.
+                 * The form's method is set to `POST`.
+                 * The form has one named input, with the `name` attribute set
+                   to `longURL`.
+
+               This means when this form is submitted, it will make a request
+               to `POST /urls`, and the body will contain one URL-encoded
+               name-value pair with the name `longURL`.
+
+               The raw POST will look something like this (many headers omitted
+               for brevity):
+
+                 POST /urls HTTP/1.1
+                 Accept: text/html, ...
+                 Content-Length: 31
+                 Content-Type: application/x-www-form-urlencoded; charset=utf-8
+                 Host: localhost
+                 User-Agent: Mozilla/5.0...
+
+                 longURL=http%3A%2F%2Fgoogle.com
+
+
+               EXAMINING THE POST REQUEST WITHIN THE BROWSER
+
+               "Using the Chrome Dev Tools, open up the `Network` tab. Enter
+               some data into the form and submit it. Inspect the `POST` request
+               inside the `Network` tab."
+
+               "We need to define the route that will match this `POST` request
+               and handle it. "
           -->
           <input
             class="form-control"

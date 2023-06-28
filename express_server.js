@@ -1,6 +1,7 @@
 // IMPORTS
 const express = require("express");
 const req = require("express/lib/request");
+const res = require("express/lib/response");
 
 
 
@@ -12,6 +13,28 @@ const PORT = 8080;
 
 // Add EJS to the project as the template engine.
 app.set("view engine", "ejs");
+
+/* Add parser to read and parse URL-encoded data. Used mainly for HTTP requests
+ * that make permanent changes like POST, PUT and DELETE (???).
+ *
+ * "When our browser submits a POST request, the data in the request body is
+ * sent as a `Buffer`. While this data type is great for transmitting data, it's
+ * not readable for us humans. To make this data readable, we will need to use
+ * another piece of middleware which will translate, or parse the body. This
+ * feature is part of Express."
+ *
+ * "The `body-parser` library will convert the request body from a `Buffer` into
+ * string that we can read. It will then add the data to the `req` (request)
+ * object under the key `body`. (If you find that `req.body` is `undefined`,
+ * it may be that the `body-parser` middleware is not being run correctly.)
+ *
+ * So using [`/urls/new` form] as an example, the data in the input field will
+ *  be available to us in the `req.body.longURL` variable, which we can store
+ * in our `urlDatabase` object. (Later we'll store these URLs in a real
+ * database, but for now we're focusing on the communication between server and
+ * client.)"
+ */
+app.use(express.urlencoded({ extended: true }));
 
 
 // Added an object with a list of URLs to the project. It simulates a data
@@ -79,20 +102,22 @@ app.get("/urls/new", (req, res) => {
 
 // Route handler for GET `/urls:id`.
 
- /* ROUTE PARAMETERS
-  *
-  * If you start the server and go to `http://localhost:8080/urls/LHLabs`,
-  * then `LHLabs` is the value of `:id` Route Parameter. It gets passed in
-  * via the URL and is added to the request body. When the request arrives at
-  * the backend, Express.js loads this value into the `req.params.id` property.
-  * From there, you can load it into the view, where it can be used.
-  */
+/* ROUTE PARAMETERS
+ *
+ * If you start the server and go to `http://localhost:8080/urls/LHLabs`,
+ * then `LHLabs` is the value of `:id` Route Parameter. It gets passed in
+ * via the URL and is added to the request body. When the request arrives at
+ * the backend, Express.js loads this value into the `req.params.id` property.
+ * From there, you can load it into the view, where it can be used.
+ */
 app.get("/urls/:id", (req, res) => {
 
   // Extract the `:id` value from the request object. You can find it in the
   // `request.params.id` property.
-  const templateVariables = { id: req.params.id,
-    longURL: urlDatabase[req.params.id] };
+  const templateVariables = {
+    id: req.params.id,
+    longURL: urlDatabase[req.params.id]
+  };
 
   // If you start the server, go its webpage and go to `.../urls/value1` and
   // pass in `b2xVn2`, the line below will print out the `templateVariable`
@@ -119,7 +144,14 @@ app.get("/urls.json", (req, res) => {
 });
 
 
+// POST REQUESTS
+// Route Handler that handles `/urls`. Captures new URLs from `urls_new.ejs`.
+app.post("/urls", (req, res) => {
 
+  console.log(req.body); // Log the POST request body to the console.
+  res.send("Ok"); // Respond with 'Ok' (we will replace this).
+
+});
 
 
 // The server program launches, listens for incoming requests at the given port
