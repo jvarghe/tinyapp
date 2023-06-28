@@ -152,20 +152,28 @@ app.get("/urls.json", (req, res) => {
 app.post("/urls", (req, res) => {
 
   console.log(req.body); // Log the POST request body to the console.
-  res.send("Ok"); // Respond with 'Ok' (we will replace this).
+  // res.send("Ok"); // Respond with 'Ok' (we will replace this).
 
   // Call `generateRandomString()` to create a short 6-character alphanumeric
   // string to serve as the short URL.
-  const id = generateRandomString();
+  const newKey = generateRandomString();
 
   // Extract the long URL value entered into the form from the request body.
   const fullURL = req.body.longURL;
 
+  // Check if the correct values have been added to the project.
   // console.log(id, fullURL);
+
+  // Add the new key and value to the `urlDatabase` project.
+  urlDatabase[newKey] = fullURL;
+
+  // Log it to console to check the values.
+  // console.log(urlDatabase);
 
   // Return a response with code 200 to let the client know that everything
   // went well.
-  res.status(200).send();
+  res.status(200);
+  res.redirect(`/urls/${newKey}`);
 
 });
 
