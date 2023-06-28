@@ -1,3 +1,45 @@
+/* M03 W06 CHALLENGE: TINY APP
+ *
+ * A NOTE TO INVIGILATORS!!!
+ *
+ * This application is not only intended for submission to LHL, but also as a
+ * reference for future education. As a result, it has been heavily commented
+ * and disused code paths have been deliberately left behind. Please bear this
+ * in mind when scoring this project.
+ *
+ * CHALLENGE
+ *
+ * This week we will start the next multi-day assignment, which will guide you
+ * through creating a fully-functioning web-server and API. For this assignment,
+ * we will create a URL shortening service similar to TinyURL, Bitly, or Goo.gl.
+ *
+ * In essence, a URL Shortener is a service that takes a regular URL and
+ * transforms it into an encoded version, which redirects back to the original
+ * URL. For example:
+ *
+ *    https://www.lighthouselabs.ca → http://goo.gl/6alQXu
+ *
+ * In order to create a service that shortens URLs we will need to apply the
+ * concepts that we learned such as HTTP redirection and APIs. Additionally,
+ * we will learn new concepts including the fundamentals of web servers, what
+ * purpose middleware serves, event-driven programming, and template engines.
+ *
+ * We will use the specific technologies to illustrate these concepts:
+ *
+ *     * Web Server: Node.js
+ *     * Middleware: Express
+ *     * Template Engine: EJS
+ *
+ * ROUTES
+ *
+ *     * GET /
+ *     * GET /urls
+ *     * GET /urls/new
+ *     * POST /urls
+ *     * GET /urls/:id
+ *     * GET /u/:id
+ */
+
 // IMPORTS
 const express = require("express");
 
