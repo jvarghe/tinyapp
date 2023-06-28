@@ -103,7 +103,8 @@ app.get("/urls/new", (req, res) => {
 });
 
 
-// Route handler for GET `/urls:id`.
+// Route handler for GET `/urls:id`. Shows the user their newly created short
+// URL.
 
 /* ROUTE PARAMETERS
  *
@@ -143,6 +144,30 @@ app.get("/urls.json", (req, res) => {
   // This endpoint will return the data from `urlDatabase` as a JSON file.
   // Note that the response method is `.json()`.
   res.json(urlDatabase);
+
+});
+
+
+// A GET request to `/u/:id` will trigger this path. After the user has created
+// a new link and added it to the database, they will be re-directed to
+// `/urls/:id`, showing them them both the long and short URL. If the user
+// were to click on the short URL, it should trigger this endpoint. It will
+// re-direct them to the actual website (the long URL).
+app.get("/u/:id", (req, res) => {
+
+  // Check if the short URL exists in `urlDatabase`; if it doesn't, send a
+  // 404 error.
+  if (req.params.id in urlDatabase !== true) {
+    res.status(404).send();
+  }
+
+  // Extract the short URL and pass it in to the URL database to find the
+  // long URL.
+  const fullURL = urlDatabase[req.params.id];
+
+  // Re-direct the user to the long web page. If successful, the re-direct
+  // should have an HTTP status code of `302 Found`.
+  res.redirect(fullURL);
 
 });
 
