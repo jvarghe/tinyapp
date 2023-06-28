@@ -32,12 +32,13 @@
  *
  * ROUTES
  *
- *     * GET /
- *     * GET /urls
- *     * GET /urls/new
+ *     * GET  /
+ *     * GET  /urls
+ *     * GET  /urls/new
  *     * POST /urls
- *     * GET /urls/:id
- *     * GET /u/:id
+ *     * GET  /urls/:id
+ *     * GET  /u/:id
+ *     * POST /urls/:id/delete
  */
 
 // IMPORTS
@@ -87,8 +88,11 @@ app.use(express.urlencoded({ extended: true }));
 // Added an object with a list of URLs to the project. It simulates a data
 // source like a database.
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  "b2xVn2": "https://www.lighthouselabs.ca",
+  "9sm5xK": "https://www.google.com",
+  "5JzOvt": "https://www.yahoo.ca",
+  "9wuFBu": "https://duckduckgo.com/",
+  "nSwQM7": "https://www.startpage.com"
 };
 
 
@@ -263,6 +267,25 @@ app.get("/u/:id", (req, res) => {
   // Re-direct the user to the long web page. If successful, the re-direct
   // should have an HTTP status code of `302 Found`.
   res.redirect(fullURL);
+
+});
+
+
+// POST `/urls/:id/delete` route handler. When the user click on the `Delete`
+// button on the `/urls` web page, this endpoint is triggered.
+app.post("/urls/:id/delete", (req, res) => {
+
+  // Find the id (short URL) of the long URL that is to be deleted.
+  const urlToDelete = req.params.id;
+
+  // Delete this record from the URL database.
+  delete urlDatabase[urlToDelete];
+
+  // Check if deletion is happening properly.
+  // console.log(urlDatabase);
+
+  // After deletion, re-direct the client to the index page.
+  res.redirect("/urls");
 
 });
 

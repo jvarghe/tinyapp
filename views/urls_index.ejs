@@ -23,83 +23,105 @@
 
 
 <!-- THE BODY -->
+
 <body>
 
   <!-- HEADER (Embedding a partial in the file). -->
   <%- include("partials/_header.ejs") %>
 
-  <!-- THE MAIN ELEMENT -->
-  <main style="margin: 1em;">
+    <!-- THE MAIN ELEMENT -->
+    <main style="margin: 1em;">
 
-    <h3>My URLs</h3>
+      <h3>My URLs</h3>
 
-    <!-- TABLE ELEMENT -->
-    <table class="table">
+      <!-- TABLE ELEMENT -->
+      <table class="table">
 
-      <!-- TABLE HEAD -->
-      <thead>
+        <!-- TABLE HEAD -->
+        <thead>
 
-        <!-- TABLE HEADING ROW -->
-        <tr>
-
-          <!-- TABLE HEADING CELL 1 -->
-          <th scope="col">Short URL ID</th>
-
-          <!-- TABLE HEADING CELL 2 -->
-          <th scope="col">Long URL</th>
-
-        </tr>
-
-
-      </thead>
-
-      <!-- TABLE BODY -->
-      <tbody>
-
-        <!-- EMBEDDING A FOR LOOP IN THE EJS FILE -->
-        <% for (let id in urls) { %>
-
-          <!-- TABLE ROWS -->
+          <!-- TABLE HEADING ROW -->
           <tr>
 
-            <!-- TABLE ROW 1, CELL 1 -->
-            <!-- Prints out the keys in `urlDatabase` -->
-            <td>
-              <%= id %>
-            </td>
+            <!-- TABLE HEADING CELL 1 -->
+            <th scope="col">Short URL ID</th>
 
-            <!-- TABLE ROW 1, CELL 2 -->
-            <td>
-              <!-- Prints out the values in `urlDatabase` -->
-              <%= urls[id] %>
-            </td>
+            <!-- TABLE HEADING CELL 2 -->
+            <th scope="col">Long URL</th>
+
+            <!-- TABLE HEADING CELL 3 -->
+            <th scope="col">Delete</th>
 
           </tr>
 
-          <% } %>
 
-      </tbody>
+        </thead>
 
-    </table>
+        <!-- TABLE BODY -->
+        <tbody>
 
-  </main>
+          <!-- EMBEDDING A FOR LOOP IN THE EJS FILE -->
+          <% for (let id in urls) { %>
+
+            <!-- TABLE ROWS -->
+            <tr>
+
+              <!-- TABLE COLUMN 1 -->
+              <!-- Prints out the keys (short URL) in `urlDatabase` -->
+              <td>
+                <%= id %>
+              </td>
+
+              <!-- TABLE COLUMN 2 -->
+              <!-- Prints out the values (long URL) in `urlDatabase` -->
+              <td>
+                <%= urls[id] %>
+              </td>
+
+              <!-- TABLE COLUMN 3 -->
+              <!-- Displays the `delete` button for each row. -->
+              <td>
+
+                <!-- ADD FORM TO ADD "DELETE" FUNCTIONALITY TO WEB PAGE -->
+                <!-- "Ideally, we would use the DELETE method, but forms only
+                      support GET and POST. In the future, we would use the
+                      method override package or Ajax to get around this
+                      limitation, but for this project, using POST is fine."
+                -->
+                <form method="POST" action="/urls/<%= id %>/delete">
+                  <button type="submit" class="btn btn-primary">Delete</button>
+                </form>
+
+              </td>
+
+            </tr>
+
+            <% } %>
+
+        </tbody>
+
+      </table>
 
 
-  <!-- THE SCRIPT SECTION -->
-  <!-- BOOTSTRAP JS CODE (Required because of Bootstrap CSS Library in `head`) -->
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-    crossorigin="anonymous"></script>
+
+    </main>
 
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-    crossorigin="anonymous"></script>
+    <!-- THE SCRIPT SECTION -->
+    <!-- BOOTSTRAP JS CODE (Required because of Bootstrap CSS Library in `head`) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"></script>
 
 
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-    crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"></script>
+
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"></script>
 
 
 </body>
