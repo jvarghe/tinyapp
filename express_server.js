@@ -1,5 +1,6 @@
 // IMPORTS
 const express = require("express");
+const req = require("express/lib/request");
 
 
 
@@ -54,6 +55,28 @@ app.get("/urls", (req, res) => {
 });
 
 
+// Route handler for GET `/urls/new`. This route returns a page where you can
+// add new URLs to the database.
+
+/* ON THE ORDER OF ENDPOINTS
+ *
+ * The order of route definitions matters! The GET `/urls/new` route needs to
+ * be defined before the GET `/urls/:id` route. Routes defined earlier will
+ * take precedence, so if we place this route after the `/urls/:id` definition,
+ * any calls to `/urls/new` will be handled by app.get("/urls/:id", ...)
+ * because Express will think that `new` is a route parameter. A good rule of
+ * thumb to follow is that routes should be ordered from most specific to least
+ * specific.
+ */
+app.get("/urls/new", (req, res) => {
+
+  // Note that if you DON'T have any information to pass into the view, you
+  // can just specify the view name, as shown here:
+  res.render("urls_new");
+
+});
+
+
 // Route handler for GET `/urls:id`.
 
  /* ROUTE PARAMETERS
@@ -94,6 +117,9 @@ app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 
 });
+
+
+
 
 
 // The server program launches, listens for incoming requests at the given port
