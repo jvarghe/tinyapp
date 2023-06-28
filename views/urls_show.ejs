@@ -51,7 +51,34 @@
 
       </div>
 
-      <div class="card-footer text-muted"></div>
+      <div class="card-footer text-muted">
+
+
+        <form method="POST" action="/urls/<%= id %>">
+
+          <!-- Label for the Input Field.  -->
+          <label>
+            Edit Long URL:
+          </label>
+
+          <!-- The input field for text. -->
+          <input
+            type="text"
+            placeholder="Enter New Long URL Here..."
+            name="longURL"
+            style="width: 300px; margin: 1em"
+          />
+
+          <!-- The button that submits this form. -->
+          <button type="submit"
+            class="btn btn-outline-warning"
+            style="width: 75px; height:30px;
+              margin: 1em; display: inline-flex;
+              align-items: center;">Update</button>
+
+        </form>
+
+      </div>
 
     </div>
 

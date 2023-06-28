@@ -274,7 +274,7 @@ app.post("/urls/:id", (req, res) => {
   // attribute.
   const fullNewURL = req.body.longURL;
 
-  console.log(fullNewURL);
+  // console.log(fullNewURL);
 
   // Update the database with the
   urlDatabase[shortURL] = fullNewURL;
