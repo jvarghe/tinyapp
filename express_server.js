@@ -15,7 +15,10 @@ const PORT = 8080;
 app.set("view engine", "ejs");
 
 /* Add parser to read and parse URL-encoded data. Used mainly for HTTP requests
- * that make permanent changes like POST, PUT and DELETE (???).
+ * that make permanent changes like POST (also PUT and DELETE??). These requests
+ * make permanent changes to persistent storage, and so they must specify such
+ * changes. For some requests, they are passed in via the URL. Such data is
+ * URL-encoded and must be decoded before it can be used.
  *
  * "When our browser submits a POST request, the data in the request body is
  * sent as a `Buffer`. While this data type is great for transmitting data, it's
