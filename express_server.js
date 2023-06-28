@@ -154,7 +154,21 @@ app.post("/urls", (req, res) => {
   console.log(req.body); // Log the POST request body to the console.
   res.send("Ok"); // Respond with 'Ok' (we will replace this).
 
+  // Call `generateRandomString()` to create a short 6-character alphanumeric
+  // string to serve as the short URL.
+  const id = generateRandomString();
+
+  // Extract the long URL value entered into the form from the request body.
+  const fullURL = req.body.longURL;
+
+  // console.log(id, fullURL);
+
+  // Return a response with code 200 to let the client know that everything
+  // went well.
+  res.status(200).send();
+
 });
+
 
 
 // The server program launches, listens for incoming requests at the given port
