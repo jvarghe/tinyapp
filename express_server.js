@@ -128,6 +128,8 @@ app.get("/hello", (req, res) => {
 
 // MAIN ROUTE HANDLERS
 
+// GET ENDPOINTS
+
 // A GET request to `/urls.json` will trigger with path. It returns the contents
 // of the URL database to the client as a JSON object. Not user-friendly at all.
 app.get("/urls.json", (req, res) => {
@@ -178,39 +180,6 @@ app.get("/urls/new", (req, res) => {
 });
 
 
-// Route Handler that handles POST `/urls`. When the user enters a new URL into
-// `urls_new.ejs` and presses `Submit`, this endpoint is triggered. It stores
-// the URL in the database and re-directs it to GET `/urls/:id`, where the user
-// can see both long and short versions of the URL they just entered.
-app.post("/urls", (req, res) => {
-
-  console.log(req.body); // Log the POST request body to the console.
-
-  // Call `generateRandomString()` to create a short 6-character alphanumeric
-  // string to serve as the short URL.
-  const newKey = generateRandomString();
-
-  // Extract the long URL value entered into the form from the request body.
-  const fullURL = req.body.longURL;
-
-  // Check if the correct values have been added to the project.
-  // console.log(id, fullURL);
-
-  // Add the new key and value to the `urlDatabase` project.
-  urlDatabase[newKey] = fullURL;
-
-  // Log it to console to check the values.
-  // console.log(urlDatabase);
-
-  // Return a response with code 200 to let the client know that everything
-  // went well...
-  res.status(200);
-
-  // ...and re-direct them to page where they can see values they entered.
-  res.redirect(`/urls/${newKey}`);
-
-});
-
 
 // Route handler for GET `/urls:id`. Re-directs from POST `/urls`; Shows the
 // user their newly created short URL.
@@ -247,6 +216,7 @@ app.get("/urls/:id", (req, res) => {
 });
 
 
+
 // A GET request to `/u/:id` will trigger this path. After the user has created
 // a new link and added it to the database, they will be re-directed to
 // `/urls/:id`, showing them them both the long and short URL. If the user
@@ -271,6 +241,9 @@ app.get("/u/:id", (req, res) => {
 });
 
 
+
+// POST ENDPOINTS
+
 // POST `/urls/:id/delete` route handler. When the user click on the `Delete`
 // button on the `/urls` web page, this endpoint is triggered.
 app.post("/urls/:id/delete", (req, res) => {
@@ -286,6 +259,66 @@ app.post("/urls/:id/delete", (req, res) => {
 
   // After deletion, re-direct the client to the index page.
   res.redirect("/urls");
+
+});
+
+
+// A POST `/urls/:id` Endpoint. It gets called from `urls_index.ejs`, when th
+// user tries to update an existing record by passing in a long URL.
+app.post("/urls/:id", (req, res) => {
+
+  // Store the returned short URL in `id`.
+  const shortURL = req.params.id;
+
+  // The new replacement URL should be coming in via the `Update` form's `name`
+  // attribute.
+  const fullNewURL = req.body.longURL;
+
+  console.log(fullNewURL);
+
+  // Update the database with the
+  urlDatabase[shortURL] = fullNewURL;
+
+  // Log database to check that the URL has been updated.
+  // console.log(urlDatabase);
+
+  // After updating the database, re-direct the web page to `urls_show.ejs`,
+  // so that the user can see the updated list of URLs.
+  res.redirect("/urls");
+
+});
+
+
+// Route Handler that handles POST `/urls`. When the user enters a new URL into
+// `urls_new.ejs` and presses `Submit`, this endpoint is triggered. It stores
+// the URL in the database and re-directs it to GET `/urls/:id`, where the user
+// can see both long and short versions of the URL they just entered.
+app.post("/urls", (req, res) => {
+
+  console.log(req.body); // Log the POST request body to the console.
+
+  // Call `generateRandomString()` to create a short 6-character alphanumeric
+  // string to serve as the short URL.
+  const newKey = generateRandomString();
+
+  // Extract the long URL value entered into the form from the request body.
+  const fullURL = req.body.longURL;
+
+  // Check if the correct values have been added to the project.
+  // console.log(id, fullURL);
+
+  // Add the new key and value to the `urlDatabase` project.
+  urlDatabase[newKey] = fullURL;
+
+  // Log it to console to check the values.
+  // console.log(urlDatabase);
+
+  // Return a response with code 200 to let the client know that everything
+  // went well...
+  res.status(200);
+
+  // ...and re-direct them to page where they can see values they entered.
+  res.redirect(`/urls/${newKey}`);
 
 });
 
