@@ -39,6 +39,7 @@
  *     * GET  /urls/:id
  *     * GET  /u/:id
  *     * POST /urls/:id/delete
+ *     * POST /login
  */
 
 // IMPORTS
@@ -295,7 +296,7 @@ app.post("/urls/:id", (req, res) => {
 // can see both long and short versions of the URL they just entered.
 app.post("/urls", (req, res) => {
 
-  console.log(req.body); // Log the POST request body to the console.
+  // console.log(req.body); // Log the POST request body to the console.
 
   // Call `generateRandomString()` to create a short 6-character alphanumeric
   // string to serve as the short URL.
@@ -319,6 +320,32 @@ app.post("/urls", (req, res) => {
 
   // ...and re-direct them to page where they can see values they entered.
   res.redirect(`/urls/${newKey}`);
+
+});
+
+
+// A POST `/login` route endpoint. This endpoint is triggered whenever the
+// user enters a user name in the navigation bar and hits "Submit". It extracts
+// the username from the field, creates a cookie, and stores this value within
+// the cookie. It returns a response with the cookie, which now lives in the
+// client. Whenever the client makes a request, the cookie is included with it,
+// allowing the server to recognize client. This will continue until the
+// browser's cache is cleared.
+app.post("/login", (req, res) => {
+
+  // Extract the username from the request's body.
+  const username = req.body.username;
+
+  // Logs out only the user name entered by user. Aren't cookies supposed to
+  // be in key-value pairs ("username"="vanillaice")?
+  // console.log(username);
+
+  // Create a cookie, name it "usernameCookie", and store the `username` value
+  // entered by the user in the cookie.
+  res.cookie("usernameCookie", username);
+
+  // Redirect the client to the `/urls` page after successful login.
+  res.redirect("/urls");
 
 });
 

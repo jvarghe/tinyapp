@@ -6,10 +6,11 @@
   <!-- NAVIGATION BAR -->
   <nav class="navbar navbar-expand-md navbar-dark bg-success">
 
-    <!-- NAVBAR MAIN HEADING/LINK -->
+    <!-- TINY APP HEADER -->
     <a class="navbar-brand" href="/urls">Tiny App</a>
 
-    <!-- DEFINE A BUTTON ELEMENT FOR THE NAVBAR -->
+
+    <!-- DEFINES A BUTTON ELEMENT FOR THE NAVBAR -->
     <button
 
       class="navbar-toggler"
@@ -24,15 +25,35 @@
     </button>
 
 
-    <!-- ADD BUTTIONS TO NAVIGATION BAR -->
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <!-- THE NAVIGATION BAR (Contains Links (My URLs, Create New URL) & Form) -->
+    <!-- Added a Style section to make the navigation bar elements appear in a
+         row.
+    -->
+    <div id="navbarNavAltMarkup" style= "display: flex; flex-direction: row;">
 
+      <!-- NAVBAR LINKS DIV -->
       <div class="navbar-nav">
 
-        <a class="nav-item nav-link" href="/urls">My URLs</a>
-        <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
+          <a class="nav-item nav-link" href="/urls">My URLs</a>
+          <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
 
       </div>
+
+
+      <!-- FORM TO CAPTURE USER NAME -->
+      <form method="POST" action="/login">
+
+        <!-- INPUT TEXT FIELD -->
+        <input
+          type="text"
+          name="username"
+          placeholder="Enter Username"
+        />
+
+        <!-- SUBMIT BUTTON -->
+        <button type="submit" class="btn btn-primary">Submit</button>
+
+      </form>
 
     </div>
 
