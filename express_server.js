@@ -98,7 +98,8 @@ app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 
 
-// Add `cookieParser()`
+// Add `cookie-parser` middleware to the project so that it automatically parses
+// cookies and makes their data available.
 app.use(cookieParser());
 
 
@@ -246,7 +247,7 @@ app.get("/urls", (req, res) => {
     username: req.cookies["usernameCookie"]
   };
 
-  console.log(templateVariables);
+  // console.log(templateVariables);
 
   // Returns the `urls_index.ejs` template. Embeds values from`urlDatabase`
   // in it.
@@ -386,6 +387,35 @@ app.post("/login", (req, res) => {
   res.cookie("usernameCookie", username);
 
   // Redirect the client to the `/urls` page after successful login.
+  res.redirect("/urls");
+
+});
+
+
+// POST `/logout`. This endpoint can be triggered from anywhere, because the
+// form that posts to it lives in `_header.ejs`. This is the Log Out form, which
+// exists only for logged in users. When the user hits `Logout`, it will send
+// the `usernameCookie` cookie to this endpoint. The endpoint will delete this
+// cookie, logging out this user, and redirecting to `.../urls`.
+app.post("/logout", (req, res) => {
+
+  // NOTE: To avoid hard-coding the cookie name, get the cookie's name from the
+  // cookie and pass that in as a variable.
+
+  // Collect all incoming cookies.
+  const incomingCookies = req.cookies;
+
+  // Convert the keys into an array...
+  const cookieArray = Object.keys(incomingCookies);
+
+  // ...and extract the first (and only) cookie name.
+  const cookieName = cookieArray[0];
+
+
+  // Clear this cookie and log out the user.
+  res.clearCookie(cookieName);
+
+  // Re-direct to the home page.
   res.redirect("/urls");
 
 });
