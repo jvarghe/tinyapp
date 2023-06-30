@@ -5,9 +5,11 @@
  * This application is not only intended for submission to LHL, but also as a
  * reference for future education. As a result, it has been heavily commented
  * and disused code paths have been deliberately left behind. Please bear this
- * in mind when scoring this project. If you want to fold all comments to a
- * single line while marking, in VS Code apply this key chord: Ctrl+K, Ctrl+/`.
- * To unfold all comments: Ctrl+K, Ctrl+J
+ * in mind when scoring this project.
+ *
+ * If you want to fold all comments to a single line while marking, in VS Code
+ * apply this key chord: `Ctrl+K, Ctrl+/`. To unfold all comments again:
+ * `Ctrl+K, Ctrl+J`.
  *
  *
  * CHALLENGE
@@ -45,7 +47,7 @@
  * specific.
  *
  *
- * ROUTES
+ * COMPLETED ENDPOINTS FOR THE FOLLOWING ROUTES
  *
  *     * GET  /
  *     * GET  /urls
@@ -55,6 +57,8 @@
  *     * GET  /u/:id
  *     * POST /urls/:id/delete
  *     * POST /login
+ *     * POST /logout
+ *
  */
 
 // IMPORTS
