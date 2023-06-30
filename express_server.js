@@ -1,11 +1,14 @@
 /* M03 W06 CHALLENGE: TINY APP
  *
- * A NOTE TO INVIGILATORS!!!
+ *                         A NOTE TO INVIGILATORS!!!
  *
  * This application is not only intended for submission to LHL, but also as a
  * reference for future education. As a result, it has been heavily commented
  * and disused code paths have been deliberately left behind. Please bear this
- * in mind when scoring this project.
+ * in mind when scoring this project. If you want to fold all comments to a
+ * single line while marking, in VS Code apply this key chord: Ctrl+K, Ctrl+/`.
+ * To unfold all comments: Ctrl+K, Ctrl+J
+ *
  *
  * CHALLENGE
  *
