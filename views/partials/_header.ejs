@@ -40,20 +40,54 @@
       </div>
 
 
-      <!-- FORM TO CAPTURE USER NAME -->
-      <form method="POST" action="/login">
+      <!-- USERNAME/PASSWORD FORM -->
+      <!-- Display it only if the user is NOT logged in. -->
+      <% if (username === undefined) { %>
 
-        <!-- INPUT TEXT FIELD -->
-        <input
-          type="text"
-          name="username"
-          placeholder="Enter Username"
-        />
+        <!-- FORM TO CAPTURE USER NAME -->
+        <form method="POST" action="/login">
 
-        <!-- SUBMIT BUTTON -->
-        <button type="submit" class="btn btn-primary">Submit</button>
+          <!-- INPUT TEXT FIELD -->
+          <input
+            type="text"
+            name="username"
+            placeholder="Enter Username"
+          />
 
-      </form>
+          <!-- SUBMIT BUTTON -->
+          <button type="submit" class="btn btn-primary">Submit</button>
+
+        </form>
+
+      <% } %>
+
+    </div>
+
+
+    <!-- DISPLAY: LOGGED IN USERNAME + LOGOUT BUTTON -->
+    <!-- Display only if user is logged in; i.e. if cookie with username is found.
+    -->
+    <div>
+
+      <!-- If username is NOT undefined, display this text. -->
+      <% if (username !== undefined) { %>
+
+        <!-- FORM: LOGGED IN USER'S NAME + LOGOUT BUTTON -->
+        <form action="">
+
+          <!-- <P> ELEMENT THAT DISPLAYS USERNAME -->
+          <p class="nav-item nav-link"
+            style="display: inline; margin-bottom: 0; color: #FFFFFF;">Logged in as: <%= username %> !
+          </p>
+
+          <!-- SUBMIT BUTTON (TO LOGOUT) -->
+          <button type="submit"
+            class="btn btn-outline-light" style="display: inline;">Logout
+          </button>
+
+        </form>
+
+      <% } %>
 
     </div>
 

@@ -29,7 +29,9 @@
 
   <!-- THE BODY ELEMENT -->
   <body>
-    <%- include('partials/_header') %>
+
+      <!-- Note: `username` is being passed in because `_header.ejs` requires it. -->
+    <%- include('partials/_header', username) %>
 
     <main style="margin: 1em;">
 

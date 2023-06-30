@@ -56,7 +56,7 @@
 
 // IMPORTS
 const express = require("express");
-
+const cookieParser = require("cookie-parser");
 
 
 // ASSIGNMENTS
@@ -96,6 +96,10 @@ app.set("view engine", "ejs");
  * client.)"
  */
 app.use(express.urlencoded({ extended: true }));
+
+
+// Add `cookieParser()`
+app.use(cookieParser());
 
 
 // Added an object with a list of URLs to the project. It simulates a data
@@ -186,7 +190,8 @@ app.get("/urls/:id", (req, res) => {
   // `request.params.id` property.
   const templateVariables = {
     id: req.params.id,
-    longURL: urlDatabase[req.params.id]
+    longURL: urlDatabase[req.params.id],
+    username: req.cookies["usernameCookie"]
   };
 
   // If you start the server, go its webpage and go to `.../urls/[Short-Id]`
@@ -211,11 +216,17 @@ app.get("/urls/:id", (req, res) => {
 // `/urls` endpoint.
 app.get("/urls/new", (req, res) => {
 
+  const templateVariables = {
+    username: req.cookies["usernameCookie"]
+  };
+
+
   // Note that if you DON'T have any information to pass into the view, you
   // can just specify the view name, as shown here.
-  res.render("urls_new");
+  res.render("urls_new", templateVariables);
 
 });
+
 
 // GET `/urls`. Corresponds to `.../urls` [urls_index.ejs]
 //
@@ -225,7 +236,17 @@ app.get("/urls", (req, res) => {
 
   // If you are sending data to a view, even a single variable, the convention
   // is to wrap it in an object called `templateVars`.
-  const templateVariables = { urls: urlDatabase };
+  const templateVariables = {
+
+    urls: urlDatabase,
+
+    // The `usernameCookie` object contains only one string: the username.
+    // Access it with `req.cookies` and pass in the cookie name. If no one
+    // has logged it, `username` should be undefined.
+    username: req.cookies["usernameCookie"]
+  };
+
+  console.log(templateVariables);
 
   // Returns the `urls_index.ejs` template. Embeds values from`urlDatabase`
   // in it.
