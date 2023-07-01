@@ -62,6 +62,7 @@
  *
  */
 
+
 // IMPORTS
 const express = require("express");
 const cookieParser = require("cookie-parser");
@@ -111,14 +112,34 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 
-// Added an object with a list of URLs to the project. It simulates a data
-// source like a database.
+
+// DATA SOURCES
+
+// An object with a list of URLs. It simulates a data source like a database.
 const urlDatabase = {
   "b2xVn2": "https://www.lighthouselabs.ca",
   "9sm5xK": "https://www.google.com",
   "5JzOvt": "https://www.yahoo.ca",
   "9wuFBu": "https://duckduckgo.com/",
   "nSwQM7": "https://www.startpage.com"
+};
+
+
+// An object with a list of Users. It simulates a database.
+const users = {
+
+  userRandomID: {
+    id: "admin57",
+    email: "admin57@example.com",
+    password: "purple-monkey-dinosaur",
+  },
+
+  user2RandomID: {
+    id: "user119",
+    email: "user119@example.com",
+    password: "dishwasher-funk",
+  },
+
 };
 
 
@@ -439,6 +460,36 @@ app.post("/logout", (req, res) => {
   res.clearCookie(cookieName);
 
   // Re-direct to the home page.
+  res.redirect("/urls");
+
+});
+
+
+// POST `/register`. This endpoint will be triggered from `.../register`, when
+// the user fills out the form and presses `Submit`. The client will collect
+// and forward user data to this endpoint. It will create a user object,
+// populate it form data and push it into the `users` object. Then, it will
+// create a new cookie to track the new user. Finally, it will re-direct to
+// `.../urls`.
+app.post("/register", (req, res) => {
+
+  // Create a new user object and populate it with data from the registration
+  // form.
+  const newUserObject = {
+    // Create a random string for the user id.
+    id: generateRandomString(),
+    email: req.body.email,
+    password: req.body.password
+  };
+
+  // Check that the user object is being properly populated.
+  // console.log(newUserObject);
+
+  // Load it into the `users` object.
+  Object.assign(users, newUserObject);
+
+  // Create a new cookie called `user_id`. Populate it with the user object.
+  res.cookie("user_id", newUserObject);
   res.redirect("/urls");
 
 });
