@@ -58,6 +58,7 @@
  *     * POST /urls/:id/delete
  *     * POST /login
  *     * POST /logout
+ *     * GET  /register
  *
  */
 
@@ -284,6 +285,21 @@ app.get("/u/:id", (req, res) => {
   // Re-direct the user to the long web page. If successful, the re-direct
   // should have an HTTP status code of `302 Found`.
   res.redirect(fullURL);
+
+});
+
+
+// GET `/register`. Corresponds to `.../register` [urls_register.ejs]
+//
+// This is the new user registration web page.
+app.get("/register", (req, res) => {
+
+
+  const templateVariables = {
+    username: req.cookies["usernameCookie"]
+  };
+
+  res.render("urls_register.ejs", templateVariables);
 
 });
 
