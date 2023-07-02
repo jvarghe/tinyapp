@@ -128,13 +128,13 @@ const urlDatabase = {
 // An object with a list of Users. It simulates a database.
 const users = {
 
-  userRandomID: {
+  admin57: {
     id: "admin57",
     email: "admin57@example.com",
     password: "purple-monkey-dinosaur",
   },
 
-  user2RandomID: {
+  user119: {
     id: "user119",
     email: "user119@example.com",
     password: "dishwasher-funk",
