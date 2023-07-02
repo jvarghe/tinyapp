@@ -1,5 +1,5 @@
 <!-- PARTIAL: HEADER ELEMENT -->
-<!-- This partial defined the header, i.e., the green bar at the top of Tiny App.
+<!-- This partial defines the header, i.e., the green bar at the top of Tiny App.
 -->
 <header>
 
@@ -40,9 +40,9 @@
       </div>
 
 
-      <!-- USERNAME/PASSWORD FORM -->
+      <!-- EMAIL/PASSWORD FORM -->
       <!-- Display it only if the user is NOT logged in. -->
-      <% if (username === undefined) { %>
+      <% if (user.email === undefined) { %>
 
         <!-- FORM TO CAPTURE USER NAME -->
         <form method="POST" action="/login">
@@ -50,8 +50,8 @@
           <!-- INPUT TEXT FIELD -->
           <input
             type="text"
-            name="username"
-            placeholder="Enter Username"
+            name="email"
+            placeholder="Enter Email"
           />
 
           <!-- SUBMIT BUTTON -->
@@ -64,20 +64,21 @@
     </div>
 
 
-    <!-- DISPLAY: LOGGED IN USERNAME + LOGOUT BUTTON -->
-    <!-- Display only if user is logged in; i.e. if cookie with username is found.
+    <!-- DISPLAY: LOGGED IN EMAIL ACCOUNT + LOGOUT BUTTON -->
+    <!-- Display only if user is logged in; i.e. if cookie with email address
+         is found.
     -->
     <div>
 
-      <!-- If username is NOT undefined, display this text. -->
-      <% if (username !== undefined) { %>
+      <!-- If user's email is NOT undefined, display this text. -->
+      <% if (user.email !== undefined) { %>
 
         <!-- FORM: LOGGED IN USER'S NAME + LOGOUT BUTTON -->
         <form method="POST" action="/logout">
 
-          <!-- <P> ELEMENT THAT DISPLAYS USERNAME -->
+          <!-- <P> ELEMENT THAT DISPLAYS USER'S EMAIL ADDRESS -->
           <p class="nav-item nav-link"
-            style="display: inline; margin-bottom: 0; color: #FFFFFF;">Logged in as: <%= username %> !
+            style="display: inline; margin-bottom: 0; color: #FFFFFF;">Logged in as: <%= user.email %>!
           </p>
 
           <!-- SUBMIT BUTTON (TO LOGOUT) -->

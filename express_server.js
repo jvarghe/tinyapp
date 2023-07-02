@@ -264,16 +264,27 @@ app.get("/urls/new", (req, res) => {
 // list of all the URLs in the database. Both short & long URLs are displayed.
 app.get("/urls", (req, res) => {
 
+  // Extract the current user's ID from the cookie.
+  const currentUserID = req.cookies["usernameCookie"];
+
+
+  let currentUser;
+
+  // If the current user's ID matches a key in `users` object, make the
+  // `currentUser` this user object.
+  if (users[currentUserID]) {
+    currentUser = users[currentUserID];
+  }
+
+
   // If you are sending data to a view, even a single variable, the convention
   // is to wrap it in an object called `templateVars`.
   const templateVariables = {
 
     urls: urlDatabase,
 
-    // The `usernameCookie` object contains only one string: the username.
-    // Access it with `req.cookies` and pass in the cookie name. If no one
-    // has logged it, `username` should be undefined.
-    username: req.cookies["usernameCookie"]
+    // Pass the currentUser into the template below.
+    user: currentUser
   };
 
   // console.log(templateVariables);
