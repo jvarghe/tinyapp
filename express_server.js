@@ -264,33 +264,21 @@ app.get("/urls/new", (req, res) => {
 // list of all the URLs in the database. Both short & long URLs are displayed.
 app.get("/urls", (req, res) => {
 
-  // Extract the current user's ID from the cookie.
-  const currentUserID = req.cookies["usernameCookie"];
-
-
-  let currentUser;
-
-  // If the current user's ID matches a key in `users` object, make the
-  // `currentUser` this user object.
-  if (users[currentUserID]) {
-    currentUser = users[currentUserID];
-  }
+  // Based on the cookie, query the `users` database and find the user object.
+  let currentUser = findUserInDatabase(req);
 
 
   // If you are sending data to a view, even a single variable, the convention
   // is to wrap it in an object called `templateVars`.
   const templateVariables = {
-
     urls: urlDatabase,
-
     // Pass the currentUser into the template below.
     user: currentUser
   };
 
-  // console.log(templateVariables);
 
-  // Returns the `urls_index.ejs` template. Embeds values from`urlDatabase`
-  // in it.
+  // Returns the `urls_index.ejs` template. Embeds values from `urlDatabase`
+  // and `Users` in it.
   res.render("urls_index.ejs", templateVariables);
 
 });
@@ -536,3 +524,22 @@ const generateRandomString = function() {
   return randomString;
 
 };
+
+
+// This function takes in the user cookie from the request body, searches the
+// `users` database, and returns the user object.
+function findUserInDatabase(req) {
+
+  // Extract the current user's ID from the cookie.
+  const currentUserID = req.cookies["usernameCookie"];
+
+  let currentUser;
+
+  // If the current user's ID matches a key in `users` object, make the
+  // `currentUser` this user object.
+  if (users[currentUserID]) {
+    currentUser = users[currentUserID];
+  }
+
+  return currentUser;
+}
