@@ -473,11 +473,20 @@ app.post("/logout", (req, res) => {
 // `.../urls`.
 app.post("/register", (req, res) => {
 
+  // A new user object will be created, but because it's going to be stored in
+  // the `users` object, it will need a key. If you look at the `users` object,
+  // its `key` value of each user object and the `id` values within each user
+  // object are the same. Therefore, we need to generate a new name and use it
+  // it two places.
+  //
+  // Create a random string for the key's name.
+  const keyName = generateRandomString();
+
   // Create a new user object and populate it with data from the registration
   // form.
   const newUserObject = {
-    // Create a random string for the user id.
-    id: generateRandomString(),
+    // Set the `id` equal to `keyName`.
+    id: keyName,
     email: req.body.email,
     password: req.body.password
   };
@@ -486,7 +495,10 @@ app.post("/register", (req, res) => {
   // console.log(newUserObject);
 
   // Load it into the `users` object.
-  Object.assign(users, newUserObject);
+  users[keyName] = newUserObject;
+
+  // Check if the new user object is being properly loaded into `users` object.
+  // console.log(users);
 
   // Create a new cookie called `user_id`. Populate it with the user object.
   res.cookie("user_id", newUserObject);
