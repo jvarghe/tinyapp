@@ -66,6 +66,7 @@
 
 // IMPORTS
 const express = require("express");
+const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 
 
@@ -76,6 +77,9 @@ const app = express();
 
 // Define a default port for the project.
 const PORT = 8080;
+
+// Add Morgan to the program.
+app.use(morgan("dev"));
 
 // Add EJS to the project as the template engine.
 app.set("view engine", "ejs");
