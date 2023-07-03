@@ -29,8 +29,9 @@
 
   <!-- HEADER (Embedding a partial in the file). -->
 
-  <!-- Note: `username` is being passed in because `_header.ejs` requires it. -->
-  <%- include("partials/_header.ejs", username) %>
+  <!-- Note: `user` (user_id) is being passed in because `_header.ejs` requires
+       it. -->
+  <%- include("partials/_header.ejs", user) %>
 
     <!-- URL CARD ELEMENT -->
     <div class="card text-center">
@@ -60,7 +61,7 @@
 
           <!-- Label for the Input Field.  -->
           <label>
-            Edit Long URL:
+            New Long URL:
           </label>
 
           <!-- The input field for text. -->

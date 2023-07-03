@@ -23,8 +23,9 @@
 <body>
 
   <!-- HEADER (Embedding a partial in the file). -->
-  <!-- Note: `username` is being passed in because `_header.ejs` requires it. -->
-  <%- include("partials/_header.ejs", username) %>
+  <!-- Note: `user` (user_id) is being passed in because `_header.ejs` requires
+       it. -->
+  <%- include("partials/_header.ejs") %>
 
 
     <!-- URL CARD ELEMENT -->
