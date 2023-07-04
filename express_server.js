@@ -208,11 +208,17 @@ app.get("/urls.json", (req, res) => {
 // `/urls` endpoint.
 app.get("/urls/new", (req, res) => {
 
+  // This variable tracks the user ID of the current user (taken from the
+  // `user_id` cookie.)
+  let currentUser;
+
   const templateVariables = {
-    // Check if a user cookie is set. If it exists, a user is logged in; set
-    // current `user` to the value of the `user_id` cookie. If the user is not
-    // logged in, set it to `null`. Either way, pass the `user` to the template.
-    user: (req.cookies["user_id"] ? req.cookies["user_id"] : null)
+    // Check if a `user_id` cookie is set. If it exists, a user is logged in;
+    // set the current user ID to the value of `["user_id"].user`. If the user
+    // is not logged in, set it to `null`. Either way, pass the `user` to the
+    // template.
+    user: (req.cookies["user_id"]) ? (currentUser = req.cookies["user_id"].user)
+      : null
   };
 
 
@@ -280,16 +286,23 @@ app.get("/urls/:id", (req, res) => {
 // list of all the URLs in the database. Both short & long URLs are displayed.
 app.get("/urls", (req, res) => {
 
+  // This variable tracks the user ID of the current user (taken from the
+  // `user_id` cookie.)
+  let currentUser;
+
+
   // If you are sending data to a view, even a single variable, the convention
   // is to wrap it in an object called `templateVars`.
   const templateVariables = {
 
     urls: urlDatabase,
 
-    // Check if a user cookie is set. If it exists, a user is logged in; set
-    // current `user` to the value of the `user_id` cookie. If the user is not
-    // logged in, set it to `null`. Either way, pass the `user` to the template.
-    user: (req.cookies["user_id"] ? req.cookies["user_id"] : null)
+    // Check if a `user_id` cookie is set. If it exists, a user is logged in;
+    // set the current user ID to the value of `["user_id"].user`. If the user
+    // is not logged in, set it to `null`. Either way, pass the `user` to the
+    // template.
+    user: (req.cookies["user_id"]) ? (currentUser = req.cookies["user_id"].user)
+      : null
 
   };
 
@@ -331,12 +344,18 @@ app.get("/u/:id", (req, res) => {
 // This is the new user registration web page.
 app.get("/register", (req, res) => {
 
+  // This variable tracks the user ID of the current user (taken from the
+  // `user_id` cookie.)
+  let currentUser;
+
 
   const templateVariables = {
-    // Check if a user cookie is set. If it exists, a user is logged in; set
-    // current `user` to the value of the `user_id` cookie. If the user is not
-    // logged in, set it to `null`. Either way, pass the `user` to the template.
-    user: (req.cookies["user_id"] ? req.cookies["user_id"] : null)
+    // Check if a `user_id` cookie is set. If it exists, a user is logged in;
+    // set the current user ID to the value of `["user_id"].user`. If the user
+    // is not logged in, set it to `null`. Either way, pass the `user` to the
+    // template.
+    user: (req.cookies["user_id"]) ? (currentUser = req.cookies["user_id"].user)
+      : null
   };
 
   res.render("urls_register.ejs", templateVariables);
@@ -349,12 +368,17 @@ app.get("/register", (req, res) => {
 // This is the user login page.
 app.get("/login", (req, res) => {
 
+  // This variable tracks the user ID of the current user (taken from the
+  // `user_id` cookie.)
+  let currentUser;
 
   const templateVariables = {
-    // Check if a user cookie is set. If it exists, a user is logged in; set
-    // current `user` to the value of the `user_id` cookie. If the user is not
-    // logged in, set it to `null`. Either way, pass the `user` to the template.
-    user: (req.cookies["user_id"] ? req.cookies["user_id"] : null)
+    // Check if a `user_id` cookie is set. If it exists, a user is logged in;
+    // set the current user ID to the value of `["user_id"].user`. If the user
+    // is not logged in, set it to `null`. Either way, pass the `user` to the
+    // template.
+    user: (req.cookies["user_id"]) ? (currentUser = req.cookies["user_id"].user)
+      : null
   };
 
   res.render("urls_login.ejs", templateVariables);
@@ -488,6 +512,8 @@ app.post("/login", (req, res) => {
     // If the user is found in the "database", extract the `user` object.
     const currentUser = findUserByEmail(userEmail);
 
+    console.log(currentUser);
+
     // Check whether the two passwords match...
     if (userPassword === users[currentUser].password) {
 
@@ -496,7 +522,7 @@ app.post("/login", (req, res) => {
       // `user` object or just the user's ID to the template. I'm going with
       // the ID because of a mentor's suggestion.].
       const templateVariables = {
-        user: users[currentUser].id,
+        user: currentUser,
       };
 
       res.cookie("user_id", templateVariables);
