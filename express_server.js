@@ -200,6 +200,26 @@ app.get("/urls.json", (req, res) => {
 
 // GET ENDPOINTS
 
+
+// GET `/urls/new`. Corresponds to `.../urls/new` [urls_new.ejs]
+//
+// This endpoint returns a web page where you can add new URLs to the database.
+// If the user enter a new URL and hits `Submit`, it will trigger the POST
+// `/urls` endpoint.
+app.get("/urls/new", (req, res) => {
+
+  const templateVariables = {
+    user: (req.cookies["user_id"] ? req.cookies["user_id"].user : null)
+  };
+
+
+  // Note that if you DON'T have any information to pass into the view, you
+  // can just specify the view name, as shown here.
+  res.render("urls_new", templateVariables);
+
+});
+
+
 /* GET `/urls/:id`. Corresponds to `.../urls/[short-URL]` [urls_show.ejs]
  *
  * Route handler for GET `/urls:id`, where `:id` stands for the short URL.
@@ -247,25 +267,6 @@ app.get("/urls/:id", (req, res) => {
   // Invoke the template engine, ask for the view called `urls_show.ejs` and
   // pass in the `templateVariables` object. Embed values from it in the view.
   res.render("urls_show.ejs", templateVariables);
-
-});
-
-
-// GET `/urls/new`. Corresponds to `.../urls/new` [urls_new.ejs]
-//
-// This endpoint returns a web page where you can add new URLs to the database.
-// If the user enter a new URL and hits `Submit`, it will trigger the POST
-// `/urls` endpoint.
-app.get("/urls/new", (req, res) => {
-
-  const templateVariables = {
-    user: req.cookies["user_id"]
-  };
-
-
-  // Note that if you DON'T have any information to pass into the view, you
-  // can just specify the view name, as shown here.
-  res.render("urls_new", templateVariables);
 
 });
 
