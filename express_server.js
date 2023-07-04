@@ -276,11 +276,8 @@ app.get("/urls/new", (req, res) => {
 // list of all the URLs in the database. Both short & long URLs are displayed.
 app.get("/urls", (req, res) => {
 
-  // The cookie tells you the user's ID.
-  let userID = req.cookies["user_id"];
-
-  // Based on that, find the `user` object in `users`.
-  let currentUser = users[userID];
+  // Get the current cookie.
+  const currentUser = req.cookies["user_id"];
 
   // If you are sending data to a view, even a single variable, the convention
   // is to wrap it in an object called `templateVars`.
@@ -437,21 +434,70 @@ app.post("/urls", (req, res) => {
 
 
 // POST `/login`. This endpoint is triggered whenever the user enters their
-// credentials in the navigation bar and hits "Submit". It extracts the
-// credentials from the form, creates a cookie, and stores the value(s) within
-// the cookie. It returns a response with the cookie, which now lives in the
-// client. Whenever the client makes a request, the cookie is included with
-// it, allowing the server to recognize client. The client will continue send
-// the cookie with every request until the browser's cache is cleared.
+// credentials in the `.../login` page and hits "Submit". It extracts the
+// credentials from the form, authenticates the user, creates a cookie, and
+// stores user's ID within the cookie. Then, this endpoint returns a response
+// with the cookie.
+//
+// The cookie now lives in the client. Whenever the client makes a request, the
+// cookie is forwarded to the server, allowing it to recognize the client as a
+// legitimately authenticated user. The client will continue send the cookie
+// with every request until the browser's cache is cleared.
 app.post("/login", (req, res) => {
 
+  const userEmail = req.body.email;
+  const userPassword = req.body.password;
 
-  let templateVars = { user: users[req.cookies['user_id']] };
+  // AUTHENTICATING THE ATTEMPTED LOGIN
 
-  res.status(200);
+  // Validate the `email` and `password` fields: Check if either is empty...
+  // if they are reject the login attempt.
+  if ((userEmail === "") || (userPassword === "")) {
 
-  // Redirect the client to the `/urls` page after successful login.
-  res.redirect("/login");
+    res.status(400).send("Email and/or password fields cannot be empty.");
+
+  }
+
+
+  // If both fields have been filled, now its time to check if the entered
+  // email address already exists within the `users` object. If it does NOT
+  // exist, reject the login attempt...
+  if (!findUserByEmail(userEmail)) {
+
+    // We are deliberately not explaining the reason for the failure as a
+    // security measure.
+    res.status(403).send("Login Attempt Failed!");
+
+
+    // ...if the email address does exist in the `users` object, then check if
+    // the password entered matches the one on file.
+  } else {
+
+    // If the user is found in the "database", extract the `user` object.
+    const currentUser = findUserByEmail(userEmail);
+
+    // Check whether the two passwords match...
+    if (userPassword === users[currentUser].password) {
+
+      // ...and if they do, load the current user's ID into the templateVars
+      // [NOTE: It's still not clear to me whether we should pass the full
+      // `user` object or just the user's ID to the template. I'm going with
+      // the ID because of a mentor's suggestion.].
+      const templateVariables = {
+        user: users[currentUser].id,
+      };
+
+      res.cookie("user_id", templateVariables);
+      res.redirect("/urls");
+
+      // ... if the passwords DON'T match, reject the login attempt.
+    } else {
+
+      res.status(403).send("Login Attempt Failed!");
+
+    }
+
+  }
 
 });
 
@@ -499,7 +545,7 @@ app.post("/register", (req, res) => {
   // TRYING TO ADD A NEW USER TO THE `USERS` OBJECT
   // Validate the `email` and `password` fields: Check if either is empty...
   if ((userEmail === "") || (userPassword === "")) {
-    res.status(400).send("Email and/or password cannot be empty.");
+    res.status(400).send("Email and/or password fields cannot be empty.");
 
     // ... then check if the newly-entered email already exists within the
     // `users` object. If it does, reject the creation attempt...
