@@ -526,7 +526,7 @@ app.post("/logout", (req, res) => {
   res.clearCookie(cookieName);
 
   // Re-direct to the home page.
-  res.redirect("/urls");
+  res.redirect("/login");
 
 });
 
