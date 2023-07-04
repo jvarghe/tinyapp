@@ -277,7 +277,7 @@ app.get("/urls/new", (req, res) => {
 app.get("/urls", (req, res) => {
 
   // Get the current cookie.
-  const currentUser = req.cookies["user_id"];
+  const currentUser = req.cookies["user_id"].user;
 
   // If you are sending data to a view, even a single variable, the convention
   // is to wrap it in an object called `templateVars`.
@@ -327,7 +327,7 @@ app.get("/register", (req, res) => {
 
 
   const templateVariables = {
-    user: req.cookies["user_id"]
+    user: req.cookies["user_id"].user
   };
 
   res.render("urls_register.ejs", templateVariables);
@@ -342,7 +342,7 @@ app.get("/login", (req, res) => {
 
 
   const templateVariables = {
-    user: req.cookies["user_id"]
+    user: req.cookies["user_id"].user
   };
 
   res.render("urls_login.ejs", templateVariables);
