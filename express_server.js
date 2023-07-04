@@ -473,34 +473,59 @@ app.post("/logout", (req, res) => {
 // `.../urls`.
 app.post("/register", (req, res) => {
 
-  // A new user object will be created, but because it's going to be stored in
-  // the `users` object, it will need a key. If you look at the `users` object,
-  // its `key` value of each user object and the `id` values within each user
-  // object are the same. Therefore, we need to generate a new name and use it
-  // it two places.
-  //
-  // Create a random string for the key's name.
-  const keyName = generateRandomString();
+  const userEmail = req.body.email;
+  const userPassword = req.body.password;
 
-  // Create a new user object and populate it with data from the registration
-  // form.
-  const newUserObject = {
-    // Set the `id` equal to `keyName`.
-    id: keyName,
-    email: req.body.email,
-    password: req.body.password
-  };
+  // TRYING TO ADD A NEW USER TO THE `USERS` OBJECT
+  // Validate the `email` and `password` fields: Check if either is empty...
+  if ((userEmail === "") || (userPassword === "")) {
+    res.status(400).send("Email and/or password cannot be empty.");
 
-  // Load it into the `users` object.
-  users[keyName] = newUserObject;
+  // ... then check if the newly-entered email already exists within the
+  // `users` object. If it does, reject the creation attempt...
+  } else if (findUserByEmail(userEmail)) {
 
-  // Create a new cookie called `user_id`. NOTE: The instructions for this
-  // section come from Week 7 > User Registration > Registering New Users >
-  // Section `Passing the `user` Object to the `_header``. ACCORDING TO A MENTOR,
-  // THIS IS HIGHLY MISLEADING! You are NOT passing the `user` object to any
-  // view, only the `user_id` value (Example: admin57) from the cookie.
-  res.cookie("user_id", keyName);
-  res.redirect("/urls");
+    res.status(400).send("Email already exists!");
+
+    // ...but if it does not, add the new user to the `users` object.
+  } else {
+
+    /* CREATING A NEW USER
+    *
+    * Once the user's credentials have been validated and found to be a new user,
+    * a new user object should be created. However, because it's going to be
+    * stored in the `users` object, it will need a key. If you look at the
+    * `users` object, its `key` value of each user object and the `id` values
+    * within each user object are the same. Therefore, we need to generate a new
+    * name and use it in two places.
+    */
+
+    // Create a random string for the key's name.
+    const keyName = generateRandomString();
+
+    // Create a new user object and populate it with data from the registration
+    // form.
+    const newUserObject = {
+      // Set the `id` equal to `keyName`.
+      id: keyName,
+      email: userEmail,
+      password: userPassword
+    };
+
+    // Load it into the `users` object.
+    users[keyName] = newUserObject;
+
+    // Check if new user was properly created.
+    // console.log(users[keyName]);
+
+    // Create a new cookie called `user_id`. NOTE: The instructions for this
+    // section come from Week 7 > User Registration > Registering New Users >
+    // Section `Passing the `user` Object to the `_header``. ACCORDING TO A
+    // MENTOR, THIS IS HIGHLY MISLEADING! You are NOT passing the `user` object
+    // to any view, only the `user_id` value (Example: admin57) from the cookie.
+    res.cookie("user_id", keyName);
+    res.redirect("/urls");
+  }
 
 });
 
@@ -522,4 +547,26 @@ const generateRandomString = function() {
 
   return randomString;
 
+};
+
+
+// This function searches the `users` object by email to check if the email
+// being added already exists.
+const findUserByEmail = function(email) {
+
+  let userExists = null;
+
+  // Iterate over the users in the `users` object.
+  for (let user in users) {
+
+    // If a user email is found in the `users` database, return it...
+    if (users[user].email === email) {
+
+      userExists = users[user].id;
+
+    }
+  }
+
+  // ...or if nothing is found, return `null`.
+  return userExists;
 };
