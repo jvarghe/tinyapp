@@ -276,15 +276,17 @@ app.get("/urls/new", (req, res) => {
 // list of all the URLs in the database. Both short & long URLs are displayed.
 app.get("/urls", (req, res) => {
 
-  // Get the current cookie.
-  const currentUser = req.cookies["user_id"].user;
-
   // If you are sending data to a view, even a single variable, the convention
   // is to wrap it in an object called `templateVars`.
   const templateVariables = {
+
     urls: urlDatabase,
-    // Pass the currentUser into the template below.
-    user: currentUser
+
+    // Check if a cookie is set. If it does, set current `user` to the value of
+    // `user`. If not, set it to null. Whether it exists or not, pass the
+    // current user into the template below.
+    user: (req.cookies["user_id"] ? req.cookies["user_id"].user : null)
+
   };
 
 
@@ -327,7 +329,10 @@ app.get("/register", (req, res) => {
 
 
   const templateVariables = {
-    user: req.cookies["user_id"].user
+    // Check if a cookie is set. If it does, set current `user` to the value of
+    // `user`. If not, set it to null. Whether it exists or not, pass the
+    // current user into the template below.
+    user: (req.cookies["user_id"] ? req.cookies["user_id"].user : null)
   };
 
   res.render("urls_register.ejs", templateVariables);
@@ -342,7 +347,10 @@ app.get("/login", (req, res) => {
 
 
   const templateVariables = {
-    user: req.cookies["user_id"].user
+    // Check if a cookie is set. If it does, set current `user` to the value of
+    // `user`. If not, set it to null. Whether it exists or not, pass the
+    // current user into the template below.
+    user: (req.cookies["user_id"] ? req.cookies["user_id"].user : null)
   };
 
   res.render("urls_login.ejs", templateVariables);
