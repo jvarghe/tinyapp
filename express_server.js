@@ -50,15 +50,20 @@
  * COMPLETED ENDPOINTS FOR THE FOLLOWING ROUTES
  *
  *     * GET  /
+ *     * GET  /hello
+ *     * GET  /urls.json
+ *
  *     * GET  /urls
  *     * GET  /urls/new
- *     * POST /urls
  *     * GET  /urls/:id
  *     * GET  /u/:id
+ *     * GET  /login
+ *     * GET  /register
+ *
  *     * POST /urls/:id/delete
+ *     * POST /urls
  *     * POST /login
  *     * POST /logout
- *     * GET  /register
  *     * POST /register
  *
  */
@@ -333,6 +338,21 @@ app.get("/register", (req, res) => {
 });
 
 
+// GET `/login`. Corresponds to `.../login`. [urls_login.ejs]
+//
+// This is the user login page.
+app.get("/login", (req, res) => {
+
+
+  const templateVariables = {
+    user: req.cookies["user_id"]
+  };
+
+  res.render("urls_login.ejs", templateVariables);
+
+});
+
+
 
 // POST ENDPOINTS
 
@@ -431,7 +451,7 @@ app.post("/login", (req, res) => {
   res.status(200);
 
   // Redirect the client to the `/urls` page after successful login.
-  res.redirect("/urls");
+  res.redirect("/login");
 
 });
 
@@ -481,8 +501,8 @@ app.post("/register", (req, res) => {
   if ((userEmail === "") || (userPassword === "")) {
     res.status(400).send("Email and/or password cannot be empty.");
 
-  // ... then check if the newly-entered email already exists within the
-  // `users` object. If it does, reject the creation attempt...
+    // ... then check if the newly-entered email already exists within the
+    // `users` object. If it does, reject the creation attempt...
   } else if (findUserByEmail(userEmail)) {
 
     res.status(400).send("Email already exists!");

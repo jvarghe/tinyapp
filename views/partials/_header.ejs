@@ -37,34 +37,42 @@
 
     <div style="display: flex; flex-direction: row;">
 
-      <!-- LOGIN FORM -->
+      <!-- FOR A LOGGED IN USER  -->
       <!-- If `user` value (is the `user_id`. E.g. `user119`) is passed into the
-           header, the user is logged in, so display the logged in form. -->
+           header, the user is logged in, so display the log out form. -->
       <% if(user) { %>
 
-          <p class="nav-item nav-link"
-            style="display: inline; margin-bottom: 0; color: #FFFFFF;">Logged in as: <%= user.email %>!
-          </p>
 
+          <!-- LOGOUT BUTTON -->
           <form method="POST" action="/logout">
-             <!-- SUBMIT BUTTON (TO LOGOUT) -->
+
             <button type="submit"
               class="btn btn-outline-light" style="display: inline;">Logout
             </button>
+
           </form>
 
+      <!-- IF A USER IS NOT LOGGED IN  -->
       <!-- If `user_id` is NOT passed into the header, the user is NOT logged
-           in, so display the log in form. -->
+           in, so display the `login` and `register` forms. -->
       <% } else { %>
 
-        <form method="POST" action="/login">
-          <input
-            type="text"
-            name="email"
-            placeholder="Enter Email"
-          />
+        <!-- LOGIN BUTTON -->
+        <form method="GET" action="/login">
 
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="submit"
+            class="btn btn-outline-light" style="display: inline; margin-right: 15px;">Login
+          </button>
+
+        </form>
+
+        <!-- REGISTER BUTTON -->
+        <form method="GET" action="/register">
+
+          <button type="submit"
+            class="btn btn-outline-light" style="display: inline;">Register
+          </button>
+
         </form>
 
       <% } %>
