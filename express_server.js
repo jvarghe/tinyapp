@@ -209,7 +209,10 @@ app.get("/urls.json", (req, res) => {
 app.get("/urls/new", (req, res) => {
 
   const templateVariables = {
-    user: (req.cookies["user_id"] ? req.cookies["user_id"].user : null)
+    // Check if a user cookie is set. If it exists, a user is logged in; set
+    // current `user` to the value of the `user_id` cookie. If the user is not
+    // logged in, set it to `null`. Either way, pass the `user` to the template.
+    user: (req.cookies["user_id"] ? req.cookies["user_id"] : null)
   };
 
 
@@ -283,10 +286,10 @@ app.get("/urls", (req, res) => {
 
     urls: urlDatabase,
 
-    // Check if a cookie is set. If it does, set current `user` to the value of
-    // `user`. If not, set it to null. Whether it exists or not, pass the
-    // current user into the template below.
-    user: (req.cookies["user_id"] ? req.cookies["user_id"].user : null)
+    // Check if a user cookie is set. If it exists, a user is logged in; set
+    // current `user` to the value of the `user_id` cookie. If the user is not
+    // logged in, set it to `null`. Either way, pass the `user` to the template.
+    user: (req.cookies["user_id"] ? req.cookies["user_id"] : null)
 
   };
 
@@ -330,10 +333,10 @@ app.get("/register", (req, res) => {
 
 
   const templateVariables = {
-    // Check if a cookie is set. If it does, set current `user` to the value of
-    // `user`. If not, set it to null. Whether it exists or not, pass the
-    // current user into the template below.
-    user: (req.cookies["user_id"] ? req.cookies["user_id"].user : null)
+    // Check if a user cookie is set. If it exists, a user is logged in; set
+    // current `user` to the value of the `user_id` cookie. If the user is not
+    // logged in, set it to `null`. Either way, pass the `user` to the template.
+    user: (req.cookies["user_id"] ? req.cookies["user_id"] : null)
   };
 
   res.render("urls_register.ejs", templateVariables);
@@ -348,10 +351,10 @@ app.get("/login", (req, res) => {
 
 
   const templateVariables = {
-    // Check if a cookie is set. If it does, set current `user` to the value of
-    // `user`. If not, set it to null. Whether it exists or not, pass the
-    // current user into the template below.
-    user: (req.cookies["user_id"] ? req.cookies["user_id"].user : null)
+    // Check if a user cookie is set. If it exists, a user is logged in; set
+    // current `user` to the value of the `user_id` cookie. If the user is not
+    // logged in, set it to `null`. Either way, pass the `user` to the template.
+    user: (req.cookies["user_id"] ? req.cookies["user_id"] : null)
   };
 
   res.render("urls_login.ejs", templateVariables);
