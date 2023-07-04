@@ -272,10 +272,10 @@ app.get("/urls/new", (req, res) => {
 app.get("/urls", (req, res) => {
 
   // The cookie tells you the user's ID.
-  let user_id = req.cookies["user_id"];
+  let userID = req.cookies["user_id"];
 
   // Based on that, find the `user` object in `users`.
-  let currentUser = users[user_id];
+  let currentUser = users[userID];
 
   // If you are sending data to a view, even a single variable, the convention
   // is to wrap it in an object called `templateVars`.
