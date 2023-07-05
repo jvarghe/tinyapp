@@ -620,14 +620,19 @@ app.post("/register", (req, res) => {
     users[keyName] = newUserObject;
 
     // Check if new user was properly created.
-    // console.log(users[keyName]);
+    console.log(users[keyName]);
+
+
+    const templateVariables = {
+      user: keyName
+    };
 
     // Create a new cookie called `user_id`. NOTE: The instructions for this
     // section come from Week 7 > User Registration > Registering New Users >
     // Section `Passing the `user` Object to the `_header``. ACCORDING TO A
     // MENTOR, THIS IS HIGHLY MISLEADING! You are NOT passing the `user` object
     // to any view, only the `user_id` value (Example: admin57) from the cookie.
-    res.cookie("user_id", keyName);
+    res.cookie("user_id", templateVariables);
     res.redirect("/urls");
   }
 
