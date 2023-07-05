@@ -358,7 +358,18 @@ app.get("/register", (req, res) => {
       : null
   };
 
-  res.render("urls_register.ejs", templateVariables);
+
+  // DIRECTING REQUESTS BASED ON WHETHER A USER IS LOGGED IN
+  // If the `user` is NOT logged in, send them to the `.../register` web page...
+  if (!templateVariables.user) {
+
+    res.render("urls_register.ejs", templateVariables);
+
+    // ...but if they ARE logged in, it doesn't make sense to do that, so send
+    // them to `.../urls` page instead.
+  } else {
+    res.redirect("/urls");
+  }
 
 });
 
@@ -381,7 +392,18 @@ app.get("/login", (req, res) => {
       : null
   };
 
-  res.render("urls_login.ejs", templateVariables);
+
+  // DIRECTING REQUESTS BASED ON WHETHER A USER IS LOGGED IN
+  // If the `user` is NOT logged in, send them to the `.../login` web page...
+  if (!templateVariables.user) {
+
+    res.render("urls_login.ejs", templateVariables);
+
+    // ...but if they ARE logged in, it doesn't make sense to do that, so send
+    // them to `.../urls` page instead.
+  } else {
+    res.redirect("/urls");
+  }
 
 });
 
