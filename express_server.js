@@ -221,10 +221,26 @@ app.get("/urls/new", (req, res) => {
       : null
   };
 
+  console.log(templateVariables);
 
-  // Note that if you DON'T have any information to pass into the view, you
-  // can just specify the view name, as shown here.
-  res.render("urls_new", templateVariables);
+
+  // DIRECTING REQUESTS BASED ON WHETHER A USER IS LOGGED IN
+  // Only logged in users can create New URLs. Check if the user is logged in;
+  // If the `user` is NOT logged in, send them to the `.../login` web page...
+  if (!templateVariables.user) {
+
+    // Return the `401: Not Authorized` message and re-direct them to the
+    // Login page.
+    res.status(401);
+    res.render("urls_login", templateVariables);
+
+    // ...but if they ARE logged in, they have the right to create new URLS,
+    // so send them to `.../urls/new` page instead.
+  } else {
+
+    res.render("urls_new", templateVariables);
+
+  }
 
 });
 
@@ -275,7 +291,7 @@ app.get("/urls/:id", (req, res) => {
 
   // Invoke the template engine, ask for the view called `urls_show.ejs` and
   // pass in the `templateVariables` object. Embed values from it in the view.
-  res.render("urls_show.ejs", templateVariables);
+  res.render("urls_show", templateVariables);
 
 });
 
@@ -309,7 +325,7 @@ app.get("/urls", (req, res) => {
 
   // Returns the `urls_index.ejs` template. Embeds values from `urlDatabase`
   // and `Users` in it.
-  res.render("urls_index.ejs", templateVariables);
+  res.render("urls_index", templateVariables);
 
 });
 
@@ -363,7 +379,7 @@ app.get("/register", (req, res) => {
   // If the `user` is NOT logged in, send them to the `.../register` web page...
   if (!templateVariables.user) {
 
-    res.render("urls_register.ejs", templateVariables);
+    res.render("urls_register", templateVariables);
 
     // ...but if they ARE logged in, it doesn't make sense to do that, so send
     // them to `.../urls` page instead.
@@ -397,7 +413,7 @@ app.get("/login", (req, res) => {
   // If the `user` is NOT logged in, send them to the `.../login` web page...
   if (!templateVariables.user) {
 
-    res.render("urls_login.ejs", templateVariables);
+    res.render("urls_login", templateVariables);
 
     // ...but if they ARE logged in, it doesn't make sense to do that, so send
     // them to `.../urls` page instead.
@@ -463,30 +479,60 @@ app.post("/urls/:id", (req, res) => {
 // and short versions of the URL they just entered.
 app.post("/urls", (req, res) => {
 
-  // console.log(req.body); // Log the POST request body to the console.
+  // This variable tracks the user ID of the current user (taken from the
+  // `user_id` cookie.)
+  let currentUser;
 
-  // Call `generateRandomString()` to create a short 6-character alphanumeric
-  // string to serve as the short URL.
-  const newKey = generateRandomString();
+  const templateVariables = {
+    // Check if a `user_id` cookie is set. If it exists, a user is logged in;
+    // set the current user ID to the value of `["user_id"].user`. If the user
+    // is not logged in, set it to `null`. Either way, pass the `user` to the
+    // template.
+    user: (req.cookies["user_id"]) ? (currentUser = req.cookies["user_id"].user)
+      : null
+  };
 
-  // Extract the long URL value entered into the form from the request body.
-  const fullURL = req.body.longURL;
 
-  // Check if the correct values have been added to the project.
-  // console.log(id, fullURL);
+  // DIRECTING REQUESTS BASED ON WHETHER A USER IS LOGGED IN
+  // Only logged in users can create New URLs. Check if the user is logged in;
+  // If the `user` is NOT logged in, block the user and inform them.
+  if (!templateVariables.user) {
 
-  // Add the new key and value to the `urlDatabase` project.
-  urlDatabase[newKey] = fullURL;
+    // The user is NOT authorized, so send `401: Unauthorized` status and tell
+    // them why they can't create new URLs.
+    res.status(401).send("User is NOT Logged In! Login to Create New URLs!");
+    console.log(urlDatabase);
 
-  // Log it to console to check the values.
-  // console.log(urlDatabase);
+    // ...but if they ARE logged in, they have the right to create new URLs,
+    // so process their request instead:
+  } else {
 
-  // Return a response with code 200 to let the client know that everything
-  // went well...
-  res.status(200);
+    // console.log(req.body); // Log the POST request body to the console.
 
-  // ...and re-direct them to page where they can see values they entered.
-  res.redirect(`/urls/${newKey}`);
+    // Call `generateRandomString()` to create a short 6-character alphanumeric
+    // string to serve as the short URL.
+    const newKey = generateRandomString();
+
+    // Extract the long URL value entered into the form from the request body.
+    const fullURL = req.body.longURL;
+
+    // Check if the correct values have been added to the project.
+    // console.log(id, fullURL);
+
+    // Add the new key and value to the `urlDatabase` project.
+    urlDatabase[newKey] = fullURL;
+
+    // Log it to console to check the values.
+    // console.log(urlDatabase);
+
+    // Return a response with code 200 to let the client know that everything
+    // went well...
+    res.status(200);
+
+    // ...and re-direct them to page where they can see values they entered.
+    res.redirect(`/urls/${newKey}`);
+
+  }
 
 });
 
