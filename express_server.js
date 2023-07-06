@@ -73,6 +73,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
+const { log } = require("console");
 
 
 // ASSIGNMENTS
@@ -292,27 +293,60 @@ app.get("/urls/new", (req, res) => {
  */
 app.get("/urls/:id", (req, res) => {
 
-  console.log(req.params.id);
+  // GATHERING USER ID AND USER-RELATED DATA
 
-  // Extract the `:id` value from the request object. You can find it in the
-  // `request.params.id` property.
-  const templateVariables = {
-    id: req.params.id,
-    longURL: urlDatabase[req.params.id].longURL,
-    user: req.cookies["user_id"]
-  };
+  // Extract the current user's ID. Check if a `user_id` cookie is set. If it
+  // exists, a user is logged in; set the current user ID to the value of
+  // `["user_id"].user`. If the user is not logged in, set it to `null`.
+  const currentUser = (req.cookies["user_id"]) ? (req.cookies["user_id"].user)
+    : null;
 
-  // If you start the server, go its webpage and go to `.../urls/[Short-Id]`
-  // and pass in an existing short ID, the line below will print out the
-  // `templateVariable` object's elements, like this:
-  //
-  //     { id: 'b2xVn2', longURL: 'http://www.lighthouselabs.ca' }
-  //
-  // console.log(templateVariables);
 
-  // Invoke the template engine, ask for the view called `urls_show.ejs` and
-  // pass in the `templateVariables` object. Embed values from it in the view.
-  res.render("urls_show", templateVariables);
+  // CONDUCT CHECKS TO ENSURE THAT ONLY AUTHORIZED USERS CAN ACCESS IT.
+  // Check 1: If the current user is NOT logged in, show them an error message.
+  if (!currentUser) {
+
+    res.status(401).send("Log in to access this URL!");
+
+  }
+
+
+  // Check 2: See if the currently logged in user has authorization to access
+  // this URL.
+  const usersURLs = urlsForUser(currentUser);
+  const shortURL = req.params.id;
+
+  if (!usersURLs[shortURL]) {
+
+    res.status(401).send("Sorry, you are NOT the owner of this URL!");
+
+    // If both checks pass, the user must be logged in and have access to this
+    // URL.
+  } else {
+
+    // Extract the `:id` value from the request object. You can find it in the
+    // `request.params.id` property.
+    const templateVariables = {
+      id: shortURL,
+      longURL: urlDatabase[shortURL].longURL,
+      user: currentUser
+    };
+
+    // If you start the server, go its webpage and go to `.../urls/[Short-Id]`
+    // and pass in an existing short ID, the line below will print out the
+    // `templateVariable` object's elements, like this:
+    //
+    //     { id: 'b2xVn2', longURL: 'http://www.lighthouselabs.ca' }
+    //
+    // console.log(templateVariables);
+
+    // Invoke the template engine, ask for the view called `urls_show.ejs` and
+    // pass in the `templateVariables` object. Embed values from it in the view.
+    res.render("urls_show", templateVariables);
+
+  }
+
+
 
 });
 
@@ -323,30 +357,44 @@ app.get("/urls/:id", (req, res) => {
 // list of all the URLs in the database. Both short & long URLs are displayed.
 app.get("/urls", (req, res) => {
 
-  // This variable tracks the user ID of the current user (taken from the
-  // `user_id` cookie.)
-  // let currentUser;
+  // GATHERING USER ID AND USER-RELATED DATA
+
+  const currentUser = (req.cookies["user_id"]) ? (req.cookies["user_id"].user)
+    : null;
 
 
   // If you are sending data to a view, even a single variable, the convention
   // is to wrap it in an object called `templateVars`.
   const templateVariables = {
 
-    urls: urlDatabase,
+    // Call `urlsForUser()` to return an object containing all the URLs
+    // belonging to the current user.
+    urls: urlsForUser(currentUser),
 
-    // Check if a `user_id` cookie is set. If it exists, a user is logged in;
-    // set the current user ID to the value of `["user_id"].user`. If the user
-    // is not logged in, set it to `null`. Either way, pass the `user` to the
-    // template.
-    user: (req.cookies["user_id"]) ? (req.cookies["user_id"].user)
-      : null
+    // Null or not, pass the `user` to the template.
+    user: currentUser
 
   };
 
+  // Check if the object is being properly populated.
+  // console.log(templateVariables.urls);
 
-  // Returns the `urls_index.ejs` template. Embeds values from `urlDatabase`
-  // and `Users` in it.
-  res.render("urls_index", templateVariables);
+
+  // DIRECTING REQUESTS BASED ON WHETHER A USER IS LOGGED IN
+  // If the `user` is NOT logged in, tell them so.
+  if (!templateVariables.user) {
+
+    res.status(401);
+    res.send("A User is NOT Logged In. Login or Register First.");
+
+    // Otherwise, show them the `.../urls` page.
+  } else {
+
+    // Returns the `urls_index.ejs` template. Embeds values from `urlDatabase`
+    // and the current user in it.
+    res.render("urls_index", templateVariables);
+
+  }
 
 });
 
@@ -774,4 +822,28 @@ const findUserByEmail = function(email) {
 
   // ...or if nothing is found, return `null`.
   return userExists;
+};
+
+
+// This function queries `urlDatabase` to find all URLs which belong a user.
+// It will create and add the URLs to an object and return it.
+const urlsForUser = function(id) {
+
+  // Create an object to store the logged in user's URLs.
+  let loggedInUsersURLs = {};
+
+  // Iterate over the `urlDatabase`.
+  for (const shortURL in urlDatabase) {
+
+    // If the passed in user ID matches an user ID in the database...
+    if (id === (urlDatabase[shortURL].userID)) {
+
+      // ...add the key and value to `loggedInUsersURLs`.
+      loggedInUsersURLs[shortURL] = urlDatabase[shortURL];
+
+    }
+
+  }
+
+  return loggedInUsersURLs;
 };
