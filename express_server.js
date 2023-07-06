@@ -163,13 +163,15 @@ const users = {
   admin57: {
     id: "admin57",
     email: "admin57@example.com",
-    password: "purple-monkey-dinosaur",
+    // Hash for Password: "purple-monkey-dinosaur"
+    password: "$2a$12$EhKZJuvpNJbNcqb/tmO2gOaVXYxt5.2YsPMt1cxQA7/o8E0Dui9BC",
   },
 
   user119: {
     id: "user119",
     email: "user119@example.com",
-    password: "dishwasher-funk",
+    // Hash for Password: "dishwasher-funk"
+    password: "$2a$12$Ie1C2tcSBOaKr.jZfK4MMezGv/JX3kafiXmrSrr3iHKI8/Er.f6XW",
   },
 
 };
@@ -660,10 +662,13 @@ app.post("/login", (req, res) => {
     // If the user is found in the "database", extract the `user` object.
     const currentUser = findUserByEmail(userEmail);
 
-    console.log(currentUser);
-
-    // Check whether the two passwords match...
-    if (userPassword === users[currentUser].password) {
+    // PASSWORD CHECK
+    //
+    //   Previous, Non-Hashed Password Check:
+    //   `userPassword === users[currentUser].password`
+    //
+    // Hashed password comparison; should return `true` if their equal.
+    if (bcrypt.compareSync(userPassword, (users[currentUser].password))) {
 
       // ...and if they do, load the current user's ID into the templateVars
       // [NOTE: It's still not clear to me whether we should pass the full
@@ -784,7 +789,7 @@ app.post("/register", (req, res) => {
     users[keyName] = newUserObject;
 
     // Check if new user was properly created.
-    console.log(users[keyName]);
+    // console.log(users[keyName]);
 
 
     const templateVariables = {
@@ -899,7 +904,7 @@ const authenticateUser = function(currentUser, req, res) {
 
     userAuthenticated = true;
     return userAuthenticated;
-    
+
   }
 
 };
