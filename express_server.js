@@ -204,24 +204,24 @@ app.get("/urls.json", (req, res) => {
 // GET `/urls/new`. Corresponds to `.../urls/new` [urls_new.ejs]
 //
 // This endpoint returns a web page where you can add new URLs to the database.
-// If the user enter a new URL and hits `Submit`, it will trigger the POST
+// If the user enters a new URL and hits `Submit`, it will trigger the POST
 // `/urls` endpoint.
 app.get("/urls/new", (req, res) => {
 
   // This variable tracks the user ID of the current user (taken from the
   // `user_id` cookie.)
-  let currentUser;
+  // let currentUser;
 
   const templateVariables = {
     // Check if a `user_id` cookie is set. If it exists, a user is logged in;
     // set the current user ID to the value of `["user_id"].user`. If the user
     // is not logged in, set it to `null`. Either way, pass the `user` to the
     // template.
-    user: (req.cookies["user_id"]) ? (currentUser = req.cookies["user_id"].user)
+    user: (req.cookies["user_id"]) ? (req.cookies["user_id"].user)
       : null
   };
 
-  console.log(templateVariables);
+  // console.log(templateVariables);
 
 
   // DIRECTING REQUESTS BASED ON WHETHER A USER IS LOGGED IN
@@ -304,7 +304,7 @@ app.get("/urls", (req, res) => {
 
   // This variable tracks the user ID of the current user (taken from the
   // `user_id` cookie.)
-  let currentUser;
+  // let currentUser;
 
 
   // If you are sending data to a view, even a single variable, the convention
@@ -317,7 +317,7 @@ app.get("/urls", (req, res) => {
     // set the current user ID to the value of `["user_id"].user`. If the user
     // is not logged in, set it to `null`. Either way, pass the `user` to the
     // template.
-    user: (req.cookies["user_id"]) ? (currentUser = req.cookies["user_id"].user)
+    user: (req.cookies["user_id"]) ? (req.cookies["user_id"].user)
       : null
 
   };
@@ -362,7 +362,7 @@ app.get("/register", (req, res) => {
 
   // This variable tracks the user ID of the current user (taken from the
   // `user_id` cookie.)
-  let currentUser;
+  // let currentUser;
 
 
   const templateVariables = {
@@ -370,7 +370,7 @@ app.get("/register", (req, res) => {
     // set the current user ID to the value of `["user_id"].user`. If the user
     // is not logged in, set it to `null`. Either way, pass the `user` to the
     // template.
-    user: (req.cookies["user_id"]) ? (currentUser = req.cookies["user_id"].user)
+    user: (req.cookies["user_id"]) ? (req.cookies["user_id"].user)
       : null
   };
 
@@ -397,14 +397,14 @@ app.get("/login", (req, res) => {
 
   // This variable tracks the user ID of the current user (taken from the
   // `user_id` cookie.)
-  let currentUser;
+  // let currentUser;
 
   const templateVariables = {
     // Check if a `user_id` cookie is set. If it exists, a user is logged in;
     // set the current user ID to the value of `["user_id"].user`. If the user
     // is not logged in, set it to `null`. Either way, pass the `user` to the
     // template.
-    user: (req.cookies["user_id"]) ? (currentUser = req.cookies["user_id"].user)
+    user: (req.cookies["user_id"]) ? (req.cookies["user_id"].user)
       : null
   };
 
@@ -481,14 +481,12 @@ app.post("/urls", (req, res) => {
 
   // This variable tracks the user ID of the current user (taken from the
   // `user_id` cookie.)
-  let currentUser;
+  // let currentUser;
 
   const templateVariables = {
-    // Check if a `user_id` cookie is set. If it exists, a user is logged in;
-    // set the current user ID to the value of `["user_id"].user`. If the user
-    // is not logged in, set it to `null`. Either way, pass the `user` to the
+    // Check if a `user_id` cookie is set. Short URL ID	Long URL	Edit URLs	Deleteither way, pass the `user` to the
     // template.
-    user: (req.cookies["user_id"]) ? (currentUser = req.cookies["user_id"].user)
+    user: (req.cookies["user_id"]) ? (req.cookies["user_id"].user)
       : null
   };
 
