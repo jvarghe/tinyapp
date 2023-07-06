@@ -872,7 +872,7 @@ const urlsForUser = function(id) {
 // This function takes in a `user` object, and `req` and `res` objects from
 // the calling function. It will try to authenticate the user, but if it fails,
 // it will return `false`.
-function authenticateUser(currentUser, req, res) {
+const authenticateUser = function(currentUser, req, res) {
 
   let userAuthenticated = false;
 
@@ -897,8 +897,9 @@ function authenticateUser(currentUser, req, res) {
     // URL.
   } else {
 
-    return userAuthenticated = true;
-
+    userAuthenticated = true;
+    return userAuthenticated;
+    
   }
 
 };
