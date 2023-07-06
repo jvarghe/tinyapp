@@ -127,11 +127,32 @@ app.use(cookieParser());
 
 // An object with a list of URLs. It simulates a data source like a database.
 const urlDatabase = {
-  "b2xVn2": "https://www.lighthouselabs.ca",
-  "9sm5xK": "https://www.google.com",
-  "5JzOvt": "https://www.yahoo.ca",
-  "9wuFBu": "https://duckduckgo.com/",
-  "nSwQM7": "https://www.startpage.com"
+
+  "b2xVn2": {
+    longURL: "https://www.lighthouselabs.ca",
+    userID: "admin57"
+  },
+
+  "9sm5xK": {
+    longURL: "https://www.google.com",
+    userID: "user119"
+  },
+
+  "5JzOvt": {
+    longURL: "https://www.yahoo.ca",
+    userID: "admin57"
+  },
+
+  "9wuFBu": {
+    longURL: "https://duckduckgo.com/",
+    userID: "admin57"
+  },
+
+  "nSwQM7": {
+    longURL: "https://www.startpage.com",
+    userID: "user119"
+  }
+
 };
 
 
@@ -341,7 +362,6 @@ app.get("/u/:id", (req, res) => {
   // Check if the short URL exists in `urlDatabase`; if it doesn't, send a
   // 404 error.
   if (req.params.id in urlDatabase !== true) {
-
     res.status(404).send("Error: URL Does Not Exist in Database!");
 
   } else {
