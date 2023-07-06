@@ -485,8 +485,8 @@ app.post("/urls/:id", (req, res) => {
   // attribute.
   const fullNewURL = req.body.longURL;
 
-  // Update the database with the
-  urlDatabase[shortURL] = fullNewURL;
+  // Update the database with the new full URL.
+  urlDatabase[shortURL].longURL = fullNewURL;
 
   // Log database to check that the URL has been updated.
   // console.log(urlDatabase);
@@ -509,7 +509,7 @@ app.post("/urls", (req, res) => {
   // let currentUser;
 
   const templateVariables = {
-    // Check if a `user_id` cookie is set. Short URL ID	Long URL	Edit URLs	Deleteither way, pass the `user` to the
+    // Check if a `user_id` cookie is set. Either way, pass the `user` to the
     // template.
     user: (req.cookies["user_id"]) ? (req.cookies["user_id"].user)
       : null
@@ -524,7 +524,6 @@ app.post("/urls", (req, res) => {
     // The user is NOT authorized, so send `401: Unauthorized` status and tell
     // them why they can't create new URLs.
     res.status(401).send("User is NOT Logged In! Login to Create New URLs!");
-    console.log(urlDatabase);
 
     // ...but if they ARE logged in, they have the right to create new URLs,
     // so process their request instead:
@@ -540,10 +539,16 @@ app.post("/urls", (req, res) => {
     const fullURL = req.body.longURL;
 
     // Check if the correct values have been added to the project.
-    // console.log(id, fullURL);
+    // console.log(newKey, fullURL, templateVariables.user);
 
-    // Add the new key and value to the `urlDatabase` project.
-    urlDatabase[newKey] = fullURL;
+    // Create a new URL object:
+    const newURLObject = {
+      longURL: fullURL,
+      userID: templateVariables.user
+    };
+
+    // Add the new key and value(s) to the `urlDatabase` project.
+    urlDatabase[newKey] = newURLObject;
 
     // Log it to console to check the values.
     // console.log(urlDatabase);
