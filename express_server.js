@@ -489,17 +489,27 @@ app.get("/login", (req, res) => {
 // from the URL database. It will then re-direct to `.../urls`.
 app.post("/urls/:id/delete", (req, res) => {
 
-  // Find the id (short URL) of the long URL that is to be deleted.
-  const urlToDelete = req.params.id;
+  const currentUser = (req.cookies["user_id"]) ? (req.cookies["user_id"].user)
+    : null;
 
-  // Delete this record from the URL database.
-  delete urlDatabase[urlToDelete];
 
-  // Check if deletion is happening properly.
-  // console.log(urlDatabase);
+  // CONDUCT CHECKS TO ENSURE THAT ONLY AUTHORIZED USERS CAN ACCESS URLs
+  // This function tries to authenticates a user or returns `false` if it fails.
+  if (authenticateUser(currentUser, req, res)) {
 
-  // After deletion, re-direct the client to the index page.
-  res.redirect("/urls");
+    // Find the id (short URL) of the long URL that is to be deleted.
+    const urlToDelete = req.params.id;
+
+    // Delete this record from the URL database.
+    delete urlDatabase[urlToDelete];
+
+    // Check if deletion is happening properly.
+    // console.log(urlDatabase);
+
+    // After deletion, re-direct the client to the index page.
+    res.redirect("/urls");
+
+  }
 
 });
 
@@ -509,22 +519,32 @@ app.post("/urls/:id/delete", (req, res) => {
 //  passing in a new long URL.
 app.post("/urls/:id", (req, res) => {
 
-  // Store the returned short URL in `id`.
-  const shortURL = req.params.id;
+  const currentUser = (req.cookies["user_id"]) ? (req.cookies["user_id"].user)
+    : null;
 
-  // The new replacement URL should be coming in via the `Update` form's `name`
-  // attribute.
-  const fullNewURL = req.body.longURL;
 
-  // Update the database with the new full URL.
-  urlDatabase[shortURL].longURL = fullNewURL;
+  // CONDUCT CHECKS TO ENSURE THAT ONLY AUTHORIZED USERS CAN ACCESS URLs
+  // This function tries to authenticates a user or returns `false` if it fails.
+  if (authenticateUser(currentUser, req, res)) {
 
-  // Log database to check that the URL has been updated.
-  // console.log(urlDatabase);
+    // Store the returned short URL in `id`.
+    const shortURL = req.params.id;
 
-  // After updating the database, re-direct the web page to `urls_show.ejs`,
-  // so that the user can see the updated list of URLs.
-  res.redirect("/urls");
+    // The new replacement URL should be coming in via the `Update` form's
+    // `name` attribute.
+    const fullNewURL = req.body.longURL;
+
+    // Update the database with the new full URL.
+    urlDatabase[shortURL].longURL = fullNewURL;
+
+    // Log database to check that the URL has been updated.
+    // console.log(urlDatabase);
+
+    // After updating the database, re-direct the web page to `urls_show.ejs`,
+    // so that the user can see the updated list of URLs.
+    res.redirect("/urls");
+
+  }
 
 });
 
