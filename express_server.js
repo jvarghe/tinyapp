@@ -298,7 +298,7 @@ app.get("/urls/:id", (req, res) => {
   // `request.params.id` property.
   const templateVariables = {
     id: req.params.id,
-    longURL: urlDatabase[req.params.id],
+    longURL: urlDatabase[req.params.id].longURL,
     user: req.cookies["user_id"]
   };
 
@@ -360,15 +360,16 @@ app.get("/urls", (req, res) => {
 app.get("/u/:id", (req, res) => {
 
   // Check if the short URL exists in `urlDatabase`; if it doesn't, send a
-  // 404 error.
-  if (req.params.id in urlDatabase !== true) {
+  // `404` error.
+  if ((req.params.id in urlDatabase) !== true) {
+
     res.status(404).send("Error: URL Does Not Exist in Database!");
 
   } else {
 
     // Extract the short URL and pass it in to the URL database to find the
     // long URL.
-    const fullURL = urlDatabase[req.params.id];
+    const fullURL = urlDatabase[req.params.id].longURL;
 
     // Re-direct the user to the long web page. If successful, the re-direct
     // should have an HTTP status code of `302 Found`.
