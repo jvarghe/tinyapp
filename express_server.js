@@ -743,17 +743,33 @@ app.post("/register", (req, res) => {
   } else {
 
     /* CREATING A NEW USER
-    *
-    * Once the user's credentials have been validated and found to be a new user,
-    * a new user object should be created. However, because it's going to be
-    * stored in the `users` object, it will need a key. If you look at the
-    * `users` object, its `key` value of each user object and the `id` values
-    * within each user object are the same. Therefore, we need to generate a new
-    * name and use it in two places.
-    */
+     *
+     * Once the user's credentials have been validated and found to be a new user,
+     * a new user object should be created. However, because it's going to be
+     * stored in the `users` object, it will need a key. If you look at the
+     * `users` object, its `key` value of each user object and the `id` values
+     * within each user object are the same. Therefore, we need to generate a new
+     * name and use it in two places.
+     */
 
     // Create a random string for the key's name.
     const keyName = generateRandomString();
+
+
+    /* HASHING THE PASSWORD
+     *
+     * It's a very bad idea to store passwords in plain text, so store them as
+     * hashes. For LHL projects, use the `bcryptjs` package and synchronously
+     * do hashing and salting with `bcrypt.hashSync(password, saltRounds);`.
+     * To compare passwords to stored hashes, use this `bcryptjs` function:
+     * `bcrypt.compareSync(password, hashedPassword);`, which will return `true`
+     * if a password matches the hashed password.
+     */
+
+    const hashedPassword = bcrypt.hashSync(userPassword, 12);
+
+    // Check if the raw and hashed passwords match:
+    // console.log(`Does password === hashedPassword?: ${bcrypt.compareSync(userPassword, hashedPassword)}`);
 
     // Create a new user object and populate it with data from the registration
     // form.
@@ -761,7 +777,7 @@ app.post("/register", (req, res) => {
       // Set the `id` equal to `keyName`.
       id: keyName,
       email: userEmail,
-      password: userPassword
+      password: hashedPassword
     };
 
     // Load it into the `users` object.
