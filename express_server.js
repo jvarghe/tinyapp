@@ -341,16 +341,20 @@ app.get("/u/:id", (req, res) => {
   // Check if the short URL exists in `urlDatabase`; if it doesn't, send a
   // 404 error.
   if (req.params.id in urlDatabase !== true) {
-    res.status(404).send();
+
+    res.status(404).send("Error: URL Does Not Exist in Database!");
+
+  } else {
+
+    // Extract the short URL and pass it in to the URL database to find the
+    // long URL.
+    const fullURL = urlDatabase[req.params.id];
+
+    // Re-direct the user to the long web page. If successful, the re-direct
+    // should have an HTTP status code of `302 Found`.
+    res.status(200).redirect(fullURL);
+
   }
-
-  // Extract the short URL and pass it in to the URL database to find the
-  // long URL.
-  const fullURL = urlDatabase[req.params.id];
-
-  // Re-direct the user to the long web page. If successful, the re-direct
-  // should have an HTTP status code of `302 Found`.
-  res.redirect(fullURL);
 
 });
 
