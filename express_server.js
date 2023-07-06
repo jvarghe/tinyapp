@@ -301,7 +301,7 @@ app.get("/urls/:id", (req, res) => {
     : null;
 
 
-  // CONDUCT CHECKS TO ENSURE THAT ONLY AUTHORIZED USERS CAN ACCESS IT.
+  // CONDUCT CHECKS TO ENSURE THAT ONLY AUTHORIZED USERS CAN ACCESS URLs
   // Check 1: If the current user is NOT logged in, show them an error message.
   if (!currentUser) {
 
@@ -345,8 +345,6 @@ app.get("/urls/:id", (req, res) => {
 
   }
 
-
-
 });
 
 
@@ -357,7 +355,6 @@ app.get("/urls/:id", (req, res) => {
 app.get("/urls", (req, res) => {
 
   // GATHERING USER ID AND USER-RELATED DATA
-
   const currentUser = (req.cookies["user_id"]) ? (req.cookies["user_id"].user)
     : null;
 
