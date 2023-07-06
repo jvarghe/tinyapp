@@ -299,29 +299,16 @@ app.get("/urls/:id", (req, res) => {
   // `["user_id"].user`. If the user is not logged in, set it to `null`.
   const currentUser = (req.cookies["user_id"]) ? (req.cookies["user_id"].user)
     : null;
+  const shortURL = req.params.id;
 
 
   // CONDUCT CHECKS TO ENSURE THAT ONLY AUTHORIZED USERS CAN ACCESS URLs
-  // Check 1: If the current user is NOT logged in, show them an error message.
-  if (!currentUser) {
-
-    res.status(401).send("Log in to access this URL!");
-
-  }
-
-
-  // Check 2: See if the currently logged in user has authorization to access
-  // this URL.
-  const usersURLs = urlsForUser(currentUser);
-  const shortURL = req.params.id;
-
-  if (!usersURLs[shortURL]) {
-
-    res.status(401).send("Sorry, you are NOT the owner of this URL!");
-
-    // If both checks pass, the user must be logged in and have access to this
-    // URL.
-  } else {
+  // Call the `authenticateUser()` function to authenticate the user. If the
+  // user is NOT logged in or NOT authorized to access a resource, this function
+  // will block access and inform the user. However, if all authentication
+  // measures pass, it will return `true`; this will permit the rest of this
+  // function to run.
+  if (authenticateUser(currentUser, req, res)) {
 
     // Extract the `:id` value from the request object. You can find it in the
     // `request.params.id` property.
@@ -842,4 +829,39 @@ const urlsForUser = function(id) {
   }
 
   return loggedInUsersURLs;
+};
+
+
+// This function takes in a `user` object, and `req` and `res` objects from
+// the calling function. It will try to authenticate the user, but if it fails,
+// it will return `false`.
+function authenticateUser(currentUser, req, res) {
+
+  let userAuthenticated = false;
+
+  // Check 1: If the current user is NOT logged in, show them an error message.
+  if (!currentUser) {
+
+    res.status(401).send("Log in to access this URL!");
+
+  }
+
+
+  // Check 2: See if the currently logged in user has authorization to access
+  // this URL.
+  const usersURLs = urlsForUser(currentUser);
+  const shortURL = req.params.id;
+
+  if (!usersURLs[shortURL]) {
+
+    res.status(401).send("Sorry, you are NOT the owner of this URL!");
+
+    // If both checks pass, the user must be logged in and have access to this
+    // URL.
+  } else {
+
+    return userAuthenticated = true;
+
+  }
+
 };
