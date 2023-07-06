@@ -7,9 +7,9 @@
  * and disused code paths have been deliberately left behind. Please bear this
  * in mind when scoring this project.
  *
- * If you want to fold all comments to a single line while marking, in VS Code
- * apply this key chord: `Ctrl+K, Ctrl+/`. To unfold all comments again:
- * `Ctrl+K, Ctrl+J`.
+ * If you are bothered by extensive commenting, you can fold all comments to a
+ * single line while marking. In VS Code apply this key chord: `Ctrl+K, Ctrl+/`.
+ * To unfold all comments again: `Ctrl+K, Ctrl+J`.
  *
  *
  * CHALLENGE
@@ -73,6 +73,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
+const bcrypt = require("bcryptjs");
 
 
 // ASSIGNMENTS
