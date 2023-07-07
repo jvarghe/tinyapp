@@ -47,20 +47,21 @@
  * specific.
  *
  *
- * COMPLETED ENDPOINTS FOR THE FOLLOWING ROUTES
+ * COMPLETED ENDPOINTS (in order of appearance)
  *
  *     * GET  /
  *     * GET  /hello
  *     * GET  /urls.json
  *
- *     * GET  /urls
  *     * GET  /urls/new
  *     * GET  /urls/:id
+ *     * GET  /urls
  *     * GET  /u/:id
- *     * GET  /login
  *     * GET  /register
+ *     * GET  /login
  *
  *     * POST /urls/:id/delete
+ *     * POST /urls/:id
  *     * POST /urls
  *     * POST /login
  *     * POST /logout
