@@ -324,9 +324,8 @@ app.get("/urls/:id", (req, res) => {
 
   // Extract the current user's ID. Check if a `user_id` cookie is set. If it
   // exists, a user is logged in; set the current user ID to the value of
-  // `["user_id"].user`. If the user is not logged in, set it to `null`.
-  const currentUser = (req.cookies["user_id"]) ? (req.cookies["user_id"].user)
-    : null;
+  // `req.session.user_id`. If the user is not logged in, set it to `null`.
+  const currentUser = req.session.user_id;
   const shortURL = req.params.id;
 
 
@@ -552,9 +551,7 @@ app.post("/urls/:id/delete", (req, res) => {
 //  passing in a new long URL.
 app.post("/urls/:id", (req, res) => {
 
-  const currentUser = (req.cookies["user_id"]) ? (req.cookies["user_id"].user)
-    : null;
-
+  const currentUser = req.session.user_id;
 
   // CONDUCT CHECKS TO ENSURE THAT ONLY AUTHORIZED USERS CAN ACCESS URLs
   // This function tries to authenticates a user or returns `false` if it fails.
