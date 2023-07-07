@@ -72,7 +72,7 @@
 // IMPORTS
 const express = require("express");
 const morgan = require("morgan");
-const cookieParser = require("cookie-parser");
+const cookieSession = require("cookie-session");
 const bcrypt = require("bcryptjs");
 
 
@@ -118,10 +118,31 @@ app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 
 
-// Add `cookie-parser` middleware to the project so that it automatically parses
-// cookies and makes their data available.
-app.use(cookieParser());
+// Add `cookie-session` middleware to the project so that it automatically
+// parses cookies and makes their data available. It also encrypts them to
+// block HTTP Request-Spoofing Attacks (done by modifying cookies within a
+// browser).
+app.use(cookieSession = ({
 
+  // Cookie Name. e.g.: `user_id` from Tiny App.
+  name: "user_id",
+
+  // `keys` below refers to secret keys used to sign & verify cookie
+  // values. For production projects, you should use as many keys as
+  // possible and they should be as long and complicated as possible;
+  // basically they should look like super-long random character passwords
+  // (research what that means). For toy projects like Tiny App, you can put
+  // just 3 keys in there.
+  keys: ["TheseKeysShouldBeSuperSecret", "But-You-Can-Get-By",
+    "With_Random$trings;InAToy_Project"],
+
+  // Specify a lifespan for the cookie. It goes stale when this period
+  // expires, and your session will expire with it. It is usually
+  // specified as a series of numbers multiplying itself:
+  // (hours/day * minutes/hour * seconds/minute * ms/second)
+  maxAge: 24 * 60 * 60 * 1000 // 24 hours
+
+}));
 
 
 // DATA SOURCES
