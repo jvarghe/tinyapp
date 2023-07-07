@@ -257,15 +257,7 @@ app.get("/urls.json", (req, res) => {
 // `/urls` endpoint.
 app.get("/urls/new", (req, res) => {
 
-  // This variable tracks the user ID of the current user (taken from the
-  // `user_id` cookie.)
-  // let currentUser;
-
   const templateVariables = {
-    // Check if a `user_id` cookie is set. If it exists, a user is logged in;
-    // set the current user ID to the value of `["user_id"].user`. If the user
-    // is not logged in, set it to `null`. Either way, pass the `user` to the
-    // template.
     user: req.session.user_id
   };
 
@@ -441,18 +433,9 @@ app.get("/u/:id", (req, res) => {
 // This is the new user registration web page.
 app.get("/register", (req, res) => {
 
-  // This variable tracks the user ID of the current user (taken from the
-  // `user_id` cookie.)
-  // let currentUser;
-
 
   const templateVariables = {
-    // Check if a `user_id` cookie is set. If it exists, a user is logged in;
-    // set the current user ID to the value of `["user_id"].user`. If the user
-    // is not logged in, set it to `null`. Either way, pass the `user` to the
-    // template.
-    user: (req.cookies["user_id"]) ? (req.cookies["user_id"].user)
-      : null
+    user: req.session.user_id
   };
 
 
@@ -582,10 +565,6 @@ app.post("/urls/:id", (req, res) => {
 // re-directs the client to GET `/urls/:id`, where the user can see both long
 // and short versions of the URL they just entered.
 app.post("/urls", (req, res) => {
-
-  // This variable tracks the user ID of the current user (taken from the
-  // `user_id` cookie.)
-  // let currentUser;
 
   const templateVariables = {
     // Check if a `user_id` cookie is set. Either way, pass the `user` to the
@@ -735,7 +714,7 @@ app.post("/logout", (req, res) => {
   // cookie and pass that in as a variable.
 
   // Collect all incoming cookies.
-  const incomingCookies = req.cookies;
+  const incomingCookies = req.session;
 
   // Convert the keys into an array...
   const cookieArray = Object.keys(incomingCookies);
@@ -823,16 +802,22 @@ app.post("/register", (req, res) => {
     // console.log(users[keyName]);
 
 
-    const templateVariables = {
-      user: keyName
-    };
-
+    // SETTING COOKIES WITH `COOKIE-PARSER`
     // Create a new cookie called `user_id`. NOTE: The instructions for this
     // section come from Week 7 > User Registration > Registering New Users >
     // Section `Passing the `user` Object to the `_header``. ACCORDING TO A
     // MENTOR, THIS IS HIGHLY MISLEADING! You are NOT passing the `user` object
     // to any view, only the `user_id` value (Example: admin57) from the cookie.
-    res.cookie("user_id", templateVariables);
+    // res.cookie("user_id", templateVariables);
+    //
+    // const templateVariables = {
+    //   user: keyName
+    // };
+
+
+    // LOADING USERNAME INTO A `COOKIE-SESSION` COOKIE
+    req.session.user_id = keyName;
+
     res.redirect("/urls");
   }
 
