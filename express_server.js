@@ -122,7 +122,7 @@ app.use(express.urlencoded({ extended: true }));
 // parses cookies and makes their data available. It also encrypts them to
 // block HTTP Request-Spoofing Attacks (done by modifying cookies within a
 // browser).
-app.use(cookieSession = ({
+app.use(cookieSession({
 
   // Cookie Name. e.g.: `user_id` from Tiny App.
   name: "user_id",
@@ -133,6 +133,10 @@ app.use(cookieSession = ({
   // basically they should look like super-long random character passwords
   // (research what that means). For toy projects like Tiny App, you can put
   // just 3 keys in there.
+  //
+  // You could generate these using a UUID package, or preferably, a VS Code
+  // extension for UUID ("UUID Generator"). The latter will let you generate
+  // and insert a UUID at the cursor's site.
   keys: ["TheseKeysShouldBeSuperSecret", "But-You-Can-Get-By",
     "With_Random$trings;InAToy_Project"],
 
@@ -366,8 +370,7 @@ app.get("/urls/:id", (req, res) => {
 app.get("/urls", (req, res) => {
 
   // GATHERING USER ID AND USER-RELATED DATA
-  const currentUser = (req.cookies["user_id"]) ? (req.cookies["user_id"].user)
-    : null;
+  const currentUser = req.session.user_id;
 
 
   // If you are sending data to a view, even a single variable, the convention
@@ -484,8 +487,14 @@ app.get("/login", (req, res) => {
     // set the current user ID to the value of `["user_id"].user`. If the user
     // is not logged in, set it to `null`. Either way, pass the `user` to the
     // template.
-    user: (req.cookies["user_id"]) ? (req.cookies["user_id"].user)
-      : null
+    //
+    // `cookie-parser` way of handling cookies. Note that it operates on the
+    // request object, whereas `cookie-session` operates on the response object.
+    // user: (req.cookies["user_id"]) ? (req.cookies["user_id"].user)
+    //   : null
+
+    // Using `cookie-session` to extract user name.
+    user: req.session.user_id
   };
 
 
@@ -691,15 +700,22 @@ app.post("/login", (req, res) => {
     // Hashed password comparison; should return `true` if their equal.
     if (bcrypt.compareSync(userPassword, (users[currentUser].password))) {
 
-      // ...and if they do, load the current user's ID into the templateVars
-      // [NOTE: It's still not clear to me whether we should pass the full
-      // `user` object or just the user's ID to the template. I'm going with
-      // the ID because of a mentor's suggestion.].
-      const templateVariables = {
-        user: currentUser,
-      };
+      // COOKIE PARSER WAY OF SETTING COOKIES
+      // // ...and if they do, load the current user's ID into the templateVars
+      // // [NOTE: It's still not clear to me whether we should pass the full
+      // // `user` object or just the user's ID to the template. I'm going with
+      // // the ID because of a mentor's suggestion.].
+      // const templateVariables = {
+      //   user: currentUser,
+      // };
 
-      res.cookie("user_id", templateVariables);
+      // res.cookie("user_id", templateVariables);
+
+
+      // COOKIE SESSION WAY OF DECLARING COOKIES
+      // `cookie-session` already declares the cookie's name in the declaration.
+      // Now you need to set the current user.
+      req.session.user_id = currentUser;
       res.redirect("/urls");
 
       // ... if the passwords DON'T match, reject the login attempt.
