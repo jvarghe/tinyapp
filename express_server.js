@@ -266,8 +266,7 @@ app.get("/urls/new", (req, res) => {
     // set the current user ID to the value of `["user_id"].user`. If the user
     // is not logged in, set it to `null`. Either way, pass the `user` to the
     // template.
-    user: (req.cookies["user_id"]) ? (req.cookies["user_id"].user)
-      : null
+    user: req.session.user_id
   };
 
   // console.log(templateVariables);
@@ -521,8 +520,7 @@ app.get("/login", (req, res) => {
 // from the URL database. It will then re-direct to `.../urls`.
 app.post("/urls/:id/delete", (req, res) => {
 
-  const currentUser = (req.cookies["user_id"]) ? (req.cookies["user_id"].user)
-    : null;
+  const currentUser = req.session.user_id;
 
 
   // CONDUCT CHECKS TO ENSURE THAT ONLY AUTHORIZED USERS CAN ACCESS URLs
@@ -592,8 +590,7 @@ app.post("/urls", (req, res) => {
   const templateVariables = {
     // Check if a `user_id` cookie is set. Either way, pass the `user` to the
     // template.
-    user: (req.cookies["user_id"]) ? (req.cookies["user_id"].user)
-      : null
+    user: req.session.user_id
   };
 
 
