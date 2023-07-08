@@ -233,9 +233,11 @@ app.get("/hello", (req, res) => {
 });
 
 
-// A GET request to `/urls.json` will trigger this endpoint. It will query and
-// return the contents of the URL database to the client as a JSON object. Not
-// user-friendly at all.
+// GET `/urls.json`. Corresponds to `.../urls.json`
+//
+// A GET request to `.../urls.json` will trigger this endpoint. It will query
+// and return the contents of the URL database to the client as a JSON object.
+// Not user-friendly at all.
 app.get("/urls.json", (req, res) => {
 
   // This endpoint will return the data from `urlDatabase` as a JSON file.
@@ -258,6 +260,7 @@ app.get("/urls.json", (req, res) => {
 // `/urls` endpoint.
 app.get("/urls/new", (req, res) => {
 
+  // COLLECT USER DATA
   const templateVariables = {
     user: req.session.user_id
   };
@@ -391,8 +394,8 @@ app.get("/urls", (req, res) => {
     // Otherwise, show them the `.../urls` page.
   } else {
 
-    // Returns the `urls_index.ejs` template. Embeds values from `urlDatabase`
-    // and the current user in it.
+    // Returns the `urls_index.ejs` template. Embeds values from
+    // `templateVariables.urls` and the current user in it.
     res.render("urls_index", templateVariables);
 
   }
@@ -400,7 +403,7 @@ app.get("/urls", (req, res) => {
 });
 
 
-// GET `/u/:id`. Corresponds to `.../urls/[short-URL]` [Opens long URL]
+// GET `/u/:id`. Corresponds to `.../u/[short-URL]` [Opens long URL]
 //
 // After the user has created a new link and added it to the database, they
 // will be re-directed to `/urls/:id`, showing them them both the long and
@@ -408,6 +411,7 @@ app.get("/urls", (req, res) => {
 // this endpoint. It will re-direct them to the actual website (the long URL).
 app.get("/u/:id", (req, res) => {
 
+  // CHECK IF URL EXISTS IN DATABASE
   // Check if the short URL exists in `urlDatabase`; if it doesn't, send a
   // `404` error.
   if ((req.params.id in urlDatabase) !== true) {
@@ -434,7 +438,7 @@ app.get("/u/:id", (req, res) => {
 // This is the new user registration web page.
 app.get("/register", (req, res) => {
 
-
+  // COLLECT USER DATA
   const templateVariables = {
     user: req.session.user_id
   };
@@ -460,11 +464,10 @@ app.get("/register", (req, res) => {
 // This is the user login page.
 app.get("/login", (req, res) => {
 
-  // This variable tracks the user ID of the current user (taken from the
-  // `user_id` cookie.)
-  // let currentUser;
-
+  // COLLECT USER DATA
   const templateVariables = {
+
+    // FORMER COOKIE-HANDING MIDDLEWARE: `COOKIE-PARSER`
     // Check if a `user_id` cookie is set. If it exists, a user is logged in;
     // set the current user ID to the value of `["user_id"].user`. If the user
     // is not logged in, set it to `null`. Either way, pass the `user` to the
@@ -504,6 +507,7 @@ app.get("/login", (req, res) => {
 // from the URL database. It will then re-direct to `.../urls`.
 app.post("/urls/:id/delete", (req, res) => {
 
+  // COLLECT USER DATA
   const currentUser = req.session.user_id;
 
 
@@ -533,10 +537,11 @@ app.post("/urls/:id/delete", (req, res) => {
 //  passing in a new long URL.
 app.post("/urls/:id", (req, res) => {
 
+  // COLLECT USER DATA
   const currentUser = req.session.user_id;
 
   // CONDUCT CHECKS TO ENSURE THAT ONLY AUTHORIZED USERS CAN ACCESS URLs
-  // This function tries to authenticates a user or returns `false` if it fails.
+  // This function tries to authenticate a user or returns `false` if it fails.
   if (authenticateUser(currentUser, req, res)) {
 
     // Store the returned short URL in `id`.
@@ -552,7 +557,7 @@ app.post("/urls/:id", (req, res) => {
     // Log database to check that the URL has been updated.
     // console.log(urlDatabase);
 
-    // After updating the database, re-direct the web page to `urls_show.ejs`,
+    // After updating the database, re-direct the web page to `urls_index.ejs`,
     // so that the user can see the updated list of URLs.
     res.redirect("/urls");
 
@@ -567,9 +572,8 @@ app.post("/urls/:id", (req, res) => {
 // and short versions of the URL they just entered.
 app.post("/urls", (req, res) => {
 
+  // COLLECT USER DATA
   const templateVariables = {
-    // Check if a `user_id` cookie is set. Either way, pass the `user` to the
-    // template.
     user: req.session.user_id
   };
 
@@ -625,9 +629,10 @@ app.post("/urls", (req, res) => {
 
 // POST `/login`. This endpoint is triggered whenever the user enters their
 // credentials in the `.../login` page and hits "Submit". It extracts the
-// credentials from the form, authenticates the user, creates a cookie, and
-// stores user's ID within the cookie. Then, this endpoint returns a response
-// with the cookie.
+// credentials from the form, authenticates the user, creates a cookie (when
+// `cookie-parser` was being used; `cookie-session` creates `user_id` in its
+// declaration), and stores user's ID within the cookie. Then, this endpoint
+// returns a response with the cookie.
 //
 // The cookie now lives in the client. Whenever the client makes a request, the
 // cookie is forwarded to the server, allowing it to recognize the client as a
@@ -635,8 +640,10 @@ app.post("/urls", (req, res) => {
 // with every request until the browser's cache is cleared.
 app.post("/login", (req, res) => {
 
+  // COLLECT USER DATA
   const userEmail = req.body.email;
   const userPassword = req.body.password;
+
 
   // AUTHENTICATING THE ATTEMPTED LOGIN
 
@@ -671,10 +678,11 @@ app.post("/login", (req, res) => {
     //   Previous, Non-Hashed Password Check:
     //   `userPassword === users[currentUser].password`
     //
-    // Hashed password comparison; should return `true` if their equal.
+    // Hashed password comparison; should return `true` if they're equal.
     if (bcrypt.compareSync(userPassword, (users[currentUser].password))) {
 
       // COOKIE PARSER WAY OF SETTING COOKIES
+      //
       // // ...and if they do, load the current user's ID into the templateVars
       // // [NOTE: It's still not clear to me whether we should pass the full
       // // `user` object or just the user's ID to the template. I'm going with
@@ -688,7 +696,7 @@ app.post("/login", (req, res) => {
 
       // COOKIE SESSION WAY OF DECLARING COOKIES
       // `cookie-session` already declares the cookie's name in the declaration.
-      // Now you need to set the current user.
+      // Now you need to set the current user in the request body.
       req.session.user_id = currentUser;
       res.redirect("/urls");
 
@@ -710,6 +718,8 @@ app.post("/login", (req, res) => {
 // the `user_id` cookie to this endpoint. The endpoint will delete this
 // cookie, logging out this user, and redirecting to `.../urls`.
 app.post("/logout", (req, res) => {
+
+  // COLLECT USER DATA
 
   // NOTE: To avoid hard-coding the cookie name, get the cookie's name from the
   // cookie and pass that in as a variable.
@@ -736,11 +746,12 @@ app.post("/logout", (req, res) => {
 // POST `/register`. This endpoint will be triggered from `.../register`, when
 // the user fills out the form and presses `Submit`. The client will collect
 // and forward user data to this endpoint. It will create a user object,
-// populate it form data and push it into the `users` object. Then, it will
+// populate it with form data and push it into the `users` object. Then, it will
 // create a new cookie to track the new user. Finally, it will re-direct to
 // `.../urls`.
 app.post("/register", (req, res) => {
 
+  // COLLECT USER DATA
   const userEmail = req.body.email;
   const userPassword = req.body.password;
 
@@ -760,12 +771,12 @@ app.post("/register", (req, res) => {
 
     /* CREATING A NEW USER
      *
-     * Once the user's credentials have been validated and found to be a new user,
-     * a new user object should be created. However, because it's going to be
-     * stored in the `users` object, it will need a key. If you look at the
-     * `users` object, its `key` value of each user object and the `id` values
-     * within each user object are the same. Therefore, we need to generate a new
-     * name and use it in two places.
+     * Once the user's credentials have been validated and they have been found
+     * to be a new user, a new user object should be created. However, because
+     * it's going to be stored in the `users` object, it will need a key. If
+     * you look at the `users` object, its `key` value of each user object and
+     * the `id` values within each user object are the same. Therefore, we need
+     * to generate a new name and use it in two places.
      */
 
     // Create a random string for the key's name.
@@ -790,7 +801,7 @@ app.post("/register", (req, res) => {
     // Create a new user object and populate it with data from the registration
     // form.
     const newUserObject = {
-      // Set the `id` equal to `keyName`.
+      // Set the user's `id` equal to the newly generated `keyName`.
       id: keyName,
       email: userEmail,
       password: hashedPassword
@@ -801,19 +812,6 @@ app.post("/register", (req, res) => {
 
     // Check if new user was properly created.
     // console.log(users[keyName]);
-
-
-    // SETTING COOKIES WITH `COOKIE-PARSER`
-    // Create a new cookie called `user_id`. NOTE: The instructions for this
-    // section come from Week 7 > User Registration > Registering New Users >
-    // Section `Passing the `user` Object to the `_header``. ACCORDING TO A
-    // MENTOR, THIS IS HIGHLY MISLEADING! You are NOT passing the `user` object
-    // to any view, only the `user_id` value (Example: admin57) from the cookie.
-    // res.cookie("user_id", templateVariables);
-    //
-    // const templateVariables = {
-    //   user: keyName
-    // };
 
 
     // LOADING USERNAME INTO A `COOKIE-SESSION` COOKIE
@@ -835,9 +833,13 @@ const generateRandomString = function() {
   let randomString = "";
   const characterSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
+  // Iterate `stringLength` number of times...
   for (let i = 0; i < stringLength; i++) {
+
+    // ...and push a random character from `characterSet` into `randomString`.
     randomString += characterSet.charAt(
       Math.floor(Math.random() * characterSet.length));
+
   }
 
   return randomString;
@@ -854,9 +856,11 @@ const findUserByEmail = function(email) {
   // Iterate over the users in the `users` object.
   for (let user in users) {
 
-    // If a user email is found in the `users` database, return it...
+    // If a user email is found in the `users` database...
     if (users[user].email === email) {
 
+      // ...the user exists in the database; load the user's ID into
+      // `userExists`.
       userExists = users[user].id;
 
     }
@@ -868,7 +872,8 @@ const findUserByEmail = function(email) {
 
 
 // This function queries `urlDatabase` to find all URLs which belong a user.
-// It will create and add the URLs to an object and return it.
+// The function will create and add the URLs to an object and return it. The
+// user's `id` must be provided as an argument.
 const urlsForUser = function(id) {
 
   // Create an object to store the logged in user's URLs.
