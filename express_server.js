@@ -330,7 +330,7 @@ app.get("/urls/:id", (req, res) => {
   // will block access and inform the user. However, if all authentication
   // measures pass, it will return `true`; this will permit the rest of this
   // function to run.
-  if (authenticateUser(currentUser, req, res)) {
+  if (authenticateUser(currentUser, req, res, urlDatabase)) {
 
     // Extract the `:id` value from the request object. You can find it in the
     // `request.params.id` property.
@@ -373,7 +373,7 @@ app.get("/urls", (req, res) => {
 
     // Call `urlsForUser()` to return an object containing all the URLs
     // belonging to the current user.
-    urls: urlsForUser(currentUser),
+    urls: urlsForUser(currentUser, urlDatabase),
 
     // Null or not, pass the `user` to the template.
     user: currentUser
@@ -513,7 +513,7 @@ app.post("/urls/:id/delete", (req, res) => {
 
   // CONDUCT CHECKS TO ENSURE THAT ONLY AUTHORIZED USERS CAN ACCESS URLs
   // This function tries to authenticates a user or returns `false` if it fails.
-  if (authenticateUser(currentUser, req, res)) {
+  if (authenticateUser(currentUser, req, res, urlDatabase)) {
 
     // Find the id (short URL) of the long URL that is to be deleted.
     const urlToDelete = req.params.id;
@@ -542,7 +542,7 @@ app.post("/urls/:id", (req, res) => {
 
   // CONDUCT CHECKS TO ENSURE THAT ONLY AUTHORIZED USERS CAN ACCESS URLs
   // This function tries to authenticate a user or returns `false` if it fails.
-  if (authenticateUser(currentUser, req, res)) {
+  if (authenticateUser(currentUser, req, res, urlDatabase)) {
 
     // Store the returned short URL in `id`.
     const shortURL = req.params.id;
@@ -874,19 +874,19 @@ const findUserByEmail = function(email, usersDB) {
 // This function queries `urlDatabase` to find all URLs which belong a user.
 // The function will create and add the URLs to an object and return it. The
 // user's `id` must be provided as an argument.
-const urlsForUser = function(id) {
+const urlsForUser = function(id, urlDB) {
 
   // Create an object to store the logged in user's URLs.
   let loggedInUsersURLs = {};
 
   // Iterate over the `urlDatabase`.
-  for (const shortURL in urlDatabase) {
+  for (const shortURL in urlDB) {
 
     // If the passed in user ID matches an user ID in the database...
-    if (id === (urlDatabase[shortURL].userID)) {
+    if (id === (urlDB[shortURL].userID)) {
 
       // ...add the key and value to `loggedInUsersURLs`.
-      loggedInUsersURLs[shortURL] = urlDatabase[shortURL];
+      loggedInUsersURLs[shortURL] = urlDB[shortURL];
 
     }
 
@@ -899,7 +899,7 @@ const urlsForUser = function(id) {
 // This function takes in a `user` object, and `req` and `res` objects from
 // the calling function. It will try to authenticate the user, but if it fails,
 // it will return `false`.
-const authenticateUser = function(currentUser, req, res) {
+const authenticateUser = function(currentUser, req, res, urlDB) {
 
   let userAuthenticated = false;
 
@@ -913,7 +913,7 @@ const authenticateUser = function(currentUser, req, res) {
 
   // Check 2: See if the currently logged in user has authorization to access
   // this URL.
-  const usersURLs = urlsForUser(currentUser);
+  const usersURLs = urlsForUser(currentUser, urlDB);
   const shortURL = req.params.id;
 
   if (!usersURLs[shortURL]) {
