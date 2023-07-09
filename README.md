@@ -40,7 +40,7 @@ You can install the dependencies with these commands:
 
 * Developer Dependencies: `npm install nodemon morgan mocha chai --save-dev`
 
-Lastly, you can run the development web server using the `node express_server.js` command.
+Lastly, you can run the development web server using the `npm start` command. If you want to run the regular version, you can do so with `node express_server.js`.
 
 
 
