@@ -659,7 +659,7 @@ app.post("/login", (req, res) => {
   // If both fields have been filled, now its time to check if the entered
   // email address already exists within the `users` object. If it does NOT
   // exist, reject the login attempt...
-  if (!findUserByEmail(userEmail)) {
+  if (!findUserByEmail(userEmail, users)) {
 
     // We are deliberately not explaining the reason for the failure as a
     // security measure.
@@ -671,7 +671,7 @@ app.post("/login", (req, res) => {
   } else {
 
     // If the user is found in the "database", extract the `user` object.
-    const currentUser = findUserByEmail(userEmail);
+    const currentUser = findUserByEmail(userEmail, users);
 
     // PASSWORD CHECK
     //
@@ -762,7 +762,7 @@ app.post("/register", (req, res) => {
 
     // ... then check if the newly-entered email already exists within the
     // `users` object. If it does, reject the creation attempt...
-  } else if (findUserByEmail(userEmail)) {
+  } else if (findUserByEmail(userEmail, users)) {
 
     res.status(400).send("Email already exists!");
 
@@ -849,19 +849,19 @@ const generateRandomString = function() {
 
 // This function searches the `users` object by email to check if the email
 // being added already exists.
-const findUserByEmail = function(email) {
+const findUserByEmail = function(email, usersDB) {
 
   let userExists = null;
 
   // Iterate over the users in the `users` object.
-  for (let user in users) {
+  for (let user in usersDB) {
 
     // If a user email is found in the `users` database...
-    if (users[user].email === email) {
+    if (usersDB[user].email === email) {
 
       // ...the user exists in the database; load the user's ID into
       // `userExists`.
-      userExists = users[user].id;
+      userExists = usersDB[user].id;
 
     }
   }
