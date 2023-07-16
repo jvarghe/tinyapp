@@ -370,7 +370,6 @@ app.get("/urls", (req, res) => {
   // GATHERING USER ID AND USER-RELATED DATA
   const currentUser = req.session.user_id;
 
-
   // If you are sending data to a view, even a single variable, the convention
   // is to wrap it in an object called `templateVars`.
   const templateVariables = {
@@ -380,8 +379,8 @@ app.get("/urls", (req, res) => {
     urls: urlsForUser(currentUser, urlDatabase),
 
     // Null or not, pass the `user` to the template.
-    user: currentUser
-
+    user: currentUser,
+    email: currentUser ? (users[currentUser].email) : null
   };
 
   // Check if the object is being properly populated.
@@ -469,21 +468,28 @@ app.get("/register", (req, res) => {
 app.get("/login", (req, res) => {
 
   // COLLECT USER DATA
+  //
+  // FORMER COOKIE-HANDING MIDDLEWARE: `COOKIE-PARSER`
+  // Check if a `user_id` cookie is set. If it exists, a user is logged in;
+  // set the current user ID to the value of `["user_id"].user`. If the user
+  // is not logged in, set it to `null`. Either way, pass the `user` to the
+  // template.
+  //
+  // `cookie-parser` way of handling cookies. Note that it operates on the
+  // request object, whereas `cookie-session` operates on the response object.
+  // user: (req.cookies["user_id"]) ? (req.cookies["user_id"].user)
+  //   : null
+
+  // Using `cookie-session` to extract user name.
+  const currentUser = req.session.user_id;
+
+
+  // POPULATE TEMPLATE VARIABLES
   const templateVariables = {
 
-    // FORMER COOKIE-HANDING MIDDLEWARE: `COOKIE-PARSER`
-    // Check if a `user_id` cookie is set. If it exists, a user is logged in;
-    // set the current user ID to the value of `["user_id"].user`. If the user
-    // is not logged in, set it to `null`. Either way, pass the `user` to the
-    // template.
-    //
-    // `cookie-parser` way of handling cookies. Note that it operates on the
-    // request object, whereas `cookie-session` operates on the response object.
-    // user: (req.cookies["user_id"]) ? (req.cookies["user_id"].user)
-    //   : null
+    user: (currentUser) ? currentUser : null,
+    email: (currentUser) ? (users[currentUser].email) : null
 
-    // Using `cookie-session` to extract user name.
-    user: req.session.user_id
   };
 
 
