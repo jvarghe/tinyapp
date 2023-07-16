@@ -265,8 +265,13 @@ app.get("/urls.json", (req, res) => {
 app.get("/urls/new", (req, res) => {
 
   // COLLECT USER DATA
+  const currentUser = req.session.user_id;
+
+
+  // POPULATE TEMPLATE VARIABLES
   const templateVariables = {
-    user: req.session.user_id
+    user: currentUser,
+    email: currentUser ? (users[currentUser].email) : null,
   };
 
   // console.log(templateVariables);
@@ -325,6 +330,9 @@ app.get("/urls/:id", (req, res) => {
   // exists, a user is logged in; set the current user ID to the value of
   // `req.session.user_id`. If the user is not logged in, set it to `null`.
   const currentUser = req.session.user_id;
+
+  // Extract the `:id` value from the request object. You can find it in the
+  // `request.params.id` property.
   const shortURL = req.params.id;
 
 
@@ -336,12 +344,16 @@ app.get("/urls/:id", (req, res) => {
   // function to run.
   if (authenticateUser(currentUser, req, res, urlDatabase)) {
 
-    // Extract the `:id` value from the request object. You can find it in the
-    // `request.params.id` property.
+
+    // POPULATE TEMPLATE VARIABLES
     const templateVariables = {
+
+      user: currentUser,
+      email: currentUser ? (users[currentUser].email) : null,
+
       id: shortURL,
-      longURL: urlDatabase[shortURL].longURL,
-      user: currentUser
+      longURL: urlDatabase[shortURL].longURL
+
     };
 
     // If you start the server, go its webpage and go to `.../urls/[Short-Id]`
@@ -374,13 +386,16 @@ app.get("/urls", (req, res) => {
   // is to wrap it in an object called `templateVars`.
   const templateVariables = {
 
-    // Call `urlsForUser()` to return an object containing all the URLs
-    // belonging to the current user.
-    urls: urlsForUser(currentUser, urlDatabase),
-
     // Null or not, pass the `user` to the template.
     user: currentUser,
-    email: currentUser ? (users[currentUser].email) : null
+
+    // Based on the `user`, find the user's email.
+    email: currentUser ? (users[currentUser].email) : null,
+
+    // Call `urlsForUser()` to return an object containing all the URLs
+    // belonging to the current user.
+    urls: urlsForUser(currentUser, urlDatabase)
+
   };
 
   // Check if the object is being properly populated.
